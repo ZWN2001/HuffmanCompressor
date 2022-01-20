@@ -59,20 +59,20 @@ bool BinaryTree::addNode(Node * p_parent, Node * p_child, Brother brotherState){
         return false;
     if (brotherState == LeftChild) {
         if (p_parent->p_left != nullptr) {
-            std::cout << "error:left child exist!" << std::endl;
+//            std::cout << "error:left child exist!" << std::endl;
             return false;
         }
         p_parent->p_left = p_child;
     }
     else if (brotherState == RightChild) {
         if (p_parent->p_right != nullptr) {
-            std::cout << "error:right child exist!" << std::endl;
+//            std::cout << "error:right child exist!" << std::endl;
             return false;
         }
         p_parent->p_right = p_child;
     }
     else {
-        std::cout << "error:brotherState is wrong!" << std::endl;
+//        std::cout << "error:brotherState is wrong!" << std::endl;
         return false;
     }
     p_child->p_parent = p_parent;
@@ -153,7 +153,7 @@ HuffmanTree::~HuffmanTree(){
 bool HuffmanTree::ReadFile(char * filename){
     is.open(filename, std::ios_base::in);
     if (!is.is_open()) {
-        cout << "error: " << filename << " is not exist!" << endl;
+//        cout << "error: " << filename << " is not exist!" << endl;
         return false;
     }
     return true;
@@ -193,13 +193,9 @@ Node * HuffmanTree::findLarge(Node *p_node){
             stack.push(p);
             if (p->weight == p_node->weight) {
                 //如果large不在同权重下，则置large为p
-                if (large->weight != p->weight) {
-                    large = p;
-                }
-                    //同权重下的large比p大，也就是说p在large下方，则置large为p
-                else if(large->num < p->num){
-                    large = p;
-                }
+                if (large->weight != p->weight)  large = p;
+                //同权重下的large比p大，也就是说p在large下方，则置large为p
+                else if(large->num > p->num)  large = p;
             }
             p = p->p_left;
         }
@@ -221,12 +217,12 @@ Node * HuffmanTree::findLarge(Node *p_node){
 bool HuffmanTree::encode(char * out_filename){
     //确认文件存在
     if (!is.is_open()) {
-        cout << "error: no file read!" << endl;
+//        cout << "error: no file read!" << endl;
         return false;
     }
     os.open(out_filename, std::ios_base::out);
     if (!os.is_open()) {
-        cout << "error: can not open file to write!" << endl;
+//        cout << "error: can not open file to write!" << endl;
     }
 
 
@@ -237,20 +233,27 @@ bool HuffmanTree::encode(char * out_filename){
         cbuffer = is.get();
         bool exist = false;
         std::string code;
-        auto existNode = buffers.begin();	//buffers的一个迭代器，当cbuffer存在于树中的时候，existNode指向该节点
-        for (existNode; existNode != buffers.end(); existNode++) {
-            if (existNode->key == cbuffer) {
-                code = existNode->value;
-                for (int i = 0; '\0' != code[i]; i++) {
-                    os << code[i];
-                }
-                exist = true;
-                cout << cbuffer << " 在树中存在，编码为： " << existNode->value << endl;
-                break;
-            }
+        try {
+            auto it = leaves.find(cbuffer);
+            if (it != leaves.end()) exist = true;
+        }catch (const char* msg){
+
         }
+//        auto existNode = buffers.begin();	//buffers的一个迭代器，当cbuffer存在于树中的时候，existNode指向该节点
+//        for (  ; existNode != buffers.end(); existNode++) {
+//            if (existNode->key == cbuffer) {
+//                code = existNode->value;
+//                for (int i = 0; '\0' != code[i]; i++) {
+//                    os << code[i];
+//                }
+//                exist = true;
+//
+//                break;
+//            }
+//        }
         if (exist) {
-            Node *root = existNode->p;
+            cout << cbuffer << " 在树中存在，编码为： " << endl;
+            Node *root = leaves.at(cbuffer)->p;
             weightAdd(root);
         }
         else {
@@ -276,12 +279,19 @@ bool HuffmanTree::encode(char * out_filename){
 //            os << cbuffer;
             cout << cbuffer << "首次出现，设定编码为：" << code  << endl;
 
+
+
             //将新的字符放进buffers中
-            charMap* new_cm = new charMap();
-            new_cm->key = cbuffer;
-            new_cm->p = nyt->p_right;
-            new_cm->value = getHuffmanCode(nyt->p_right);
-            buffers.push_back(*new_cm);
+//            auto* new_cm = new charMap();
+//            new_cm->key = cbuffer;
+//            new_cm->p = nyt->p_right;
+//            new_cm->value = getHuffmanCode(nyt->p_right);
+//            buffers.push_back(*new_cm);
+            Leaf* newLeaf = new Leaf();
+            newLeaf->key = cbuffer;
+            newLeaf->p = nyt->p_right;
+            newLeaf->codeword = getHuffmanCode(nyt->p_right);
+            leaves.insert(pair<char,Leaf*>(cbuffer,newLeaf));
 
             //依次增加权重
             Node *root = nyt->p_parent;
@@ -302,14 +312,18 @@ void HuffmanTree::weightAdd(Node * p_node){
         Node* large = findLarge(p_node);
         if (large != p_node && !tree.isAncestor(p_node, large)) {
             cout << "即将为节点" << p_node->num << "加一,但是同块最大节点为：" << large->num << ",权重值为：" << p_node->weight << endl;
-            tree.swap(large, p_node);
-            int temp;
-            temp = large->num;
-            large->num = p_node->num;
-            p_node->num = temp;
-            for (auto iterator = buffers.begin(); iterator != buffers.end(); iterator++) {
-                iterator->value = getHuffmanCode(iterator->p);
-            }
+                tree.swap(large, p_node);
+                int temp;
+                temp = large->num;
+                large->num = p_node->num;
+                p_node->num = temp;
+
+                Leaf* l;
+                for (auto iterator = leaves.begin(); iterator != leaves.end(); iterator++) {
+                    l = leaves.at(iterator->first);
+                    l->codeword = getHuffmanCode(l->p);
+                    leaves[iterator->first] = l;
+                }
         }
         p_node->weight++;
         cout << "节点" << p_node->num << "权重值加1" << "为：" << p_node->weight << endl;

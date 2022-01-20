@@ -1,5 +1,6 @@
 #pragma once
 #include <fstream>
+#include <map>
 
 using std::ifstream;
 using std::ofstream;
@@ -25,15 +26,23 @@ public:
     ~BinaryTree();
     bool swap(Node* p_nodeA, Node* p_nodeB);
     static bool addNode(Node* p_parent, Node* p_child, Brother brotherState);
-    Node* findNode(Node *p);
+//    Node* findNode(Node *p);
     void deleteNode(Node *p_node);
     Node* getRoot() {return p_root;}
-    bool setNodeNum(Node* p_node,int num);
+//    bool setNodeNum(Node* p_node,int num);
     Brother getBrotherState(Node *p_node);
     bool isAncestor(Node* p_nodeChild, Node* p_nodeAncestor);
 private:
     Node *p_root;
 
+};
+
+struct Leaf{
+    char key;
+    int level;
+    int n;
+    std::string codeword;
+    Node* p;
 };
 
 
@@ -53,16 +62,18 @@ private:
     BinaryTree tree;
 
     //存储已存在字符的哈夫曼编码的结构
-    struct charMap{
-        char key;
-        std::string value;
-        Node* p;
-    };
+//    struct charMap{
+//        char key;
+//        std::string value;
+//        Node* p;
+//    };
     std::string getHuffmanCode(Node *p);
     Node * findLarge(Node *);
 
     //一个存储哪些字符已经存在于树中的缓冲
-    std::vector<charMap> buffers;
+//    std::vector<charMap> buffers;
     ifstream is;
     ofstream os;
+
+    std::map<char,Leaf*> leaves;//所有现存的叶子
 };
