@@ -8,20 +8,17 @@
 int HuffmanTree::sum = 1;
 using namespace std;
 //二叉树成员函数实现
-BinaryTree::BinaryTree(int num,int weight)
-{
+BinaryTree::BinaryTree(int num,int weight){
     p_root = new Node(nullptr,nullptr,nullptr);
     p_root->num = num;
     p_root->weight = weight;
 }
 
-BinaryTree::~BinaryTree()
-{
+BinaryTree::~BinaryTree(){
     deleteNode(p_root);
 }
 
-bool BinaryTree::swap(Node * p_nodeA, Node * p_nodeB)
-{
+bool BinaryTree::swap(Node * p_nodeA, Node * p_nodeB){
     if(p_nodeA==nullptr||p_nodeB==nullptr||p_nodeA==p_nodeB)
         return false;
     Node *pTemp;
@@ -57,8 +54,7 @@ bool BinaryTree::swap(Node * p_nodeA, Node * p_nodeB)
 
 }
 
-bool BinaryTree::addNode(Node * p_parent, Node * p_child, Brother brotherState)
-{
+bool BinaryTree::addNode(Node * p_parent, Node * p_child, Brother brotherState){
     if(p_parent==nullptr||p_child==nullptr)
         return false;
     if (brotherState == LeftChild) {
@@ -114,21 +110,18 @@ bool BinaryTree::addNode(Node * p_parent, Node * p_child, Brother brotherState)
 //    }
 //}
 
-bool BinaryTree::isAncestor(Node * p_nodeChild, Node * p_nodeAncestor)
-{
+bool BinaryTree::isAncestor(Node * p_nodeChild, Node * p_nodeAncestor){
     while (p_nodeChild != p_root) {
         if (p_nodeChild == p_nodeAncestor) {
             return true;
-        }
-        else {
+        }else {
             p_nodeChild = p_nodeChild->p_parent;
         }
     }
     return false;
 }
 
-void BinaryTree::deleteNode(Node *p_node)
-{
+void BinaryTree::deleteNode(Node *p_node){
     if (p_node->p_left!=nullptr) {
         deleteNode(p_node->p_left);
     }
@@ -138,8 +131,7 @@ void BinaryTree::deleteNode(Node *p_node)
     delete p_node;
 }
 
-BinaryTree::Brother BinaryTree::getBrotherState(Node *p_node)
-{
+BinaryTree::Brother BinaryTree::getBrotherState(Node *p_node){
     if (p_node->p_parent->p_left == p_node) {
         return LeftChild;
     }
@@ -153,14 +145,12 @@ BinaryTree::Brother BinaryTree::getBrotherState(Node *p_node)
 //哈夫曼树成员函数实现
 HuffmanTree::HuffmanTree():tree(0,0){}
 
-HuffmanTree::~HuffmanTree()
-{
+HuffmanTree::~HuffmanTree(){
     os.close();
     is.close();
 }
 
-bool HuffmanTree::ReadFile(char * filename)
-{
+bool HuffmanTree::ReadFile(char * filename){
     is.open(filename, std::ios_base::in);
     if (!is.is_open()) {
         cout << "error: " << filename << " is not exist!" << endl;
@@ -170,8 +160,7 @@ bool HuffmanTree::ReadFile(char * filename)
 }
 
 //获取节点的哈夫曼编码
-std::string HuffmanTree::getHuffmanCode(Node *p_n)
-{
+std::string HuffmanTree::getHuffmanCode(Node *p_n){
     std::string huffmanCode = "";
     std::stack<Node *> stack;
     std::deque<char> code;
@@ -195,8 +184,7 @@ std::string HuffmanTree::getHuffmanCode(Node *p_n)
 }
 
 //找到所在块中最大节点编号的节点
-Node * HuffmanTree::findLarge(Node *p_node)
-{
+Node * HuffmanTree::findLarge(Node *p_node){
     std::stack<Node *> stack;
     Node *p = tree.getRoot();//从根节点开始
     Node *large = p;
@@ -230,8 +218,7 @@ Node * HuffmanTree::findLarge(Node *p_node)
 
 
 //编码函数
-bool HuffmanTree::encode(char * out_filename)
-{
+bool HuffmanTree::encode(char * out_filename){
     //确认文件存在
     if (!is.is_open()) {
         cout << "error: no file read!" << endl;
@@ -330,8 +317,7 @@ void HuffmanTree::weightAdd(Node * p_node){
     }
 }
 
-int main()
-{
+int main(){
     HuffmanTree huff;
     char* s;
     string str = "../iHaveADream.txt";
