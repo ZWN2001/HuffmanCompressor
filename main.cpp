@@ -79,37 +79,6 @@ bool BinaryTree::addNode(Node * p_parent, Node * p_child, Brother brotherState){
     return true;
 }
 
-//Node * BinaryTree::findNode(Node *p)
-//{
-//    Node *p_node = p_root;
-//    std::queue<Node *> queue;
-//    queue.push(p_node);
-//    while (!queue.empty()) {
-//        p_node = queue.front();
-//        if (p_node == p) {
-//            return p_node;
-//        }
-//        queue.pop();
-//        if (p_node->p_left != nullptr) {
-//            queue.push(p_node->p_left);
-//        }
-//        if (p_node->p_right != nullptr) {
-//            queue.push(p_node->p_right);
-//        }
-//    }
-//    return nullptr;
-//}
-//
-//bool BinaryTree::setNodeNum(Node* p_node, int num)
-//{
-//    if(p_node==nullptr)
-//        return false;
-//    else {
-//        p_node->num = num;
-//        return true;
-//    }
-//}
-
 bool BinaryTree::isAncestor(Node * p_nodeChild, Node * p_nodeAncestor){
     while (p_nodeChild != p_root) {
         if (p_nodeChild == p_nodeAncestor) {
@@ -140,8 +109,6 @@ BinaryTree::Brother BinaryTree::getBrotherState(Node *p_node){
     }
 }
 
-
-
 //哈夫曼树成员函数实现
 HuffmanTree::HuffmanTree():tree(0,0){}
 
@@ -167,12 +134,10 @@ std::string HuffmanTree::getHuffmanCode(Node *p_n){
 
     //逆向后推，当为左孩子的时候则置0，当为右孩子的时候则置1。
     while (p_n != tree.getRoot()) {
-        if (tree.getBrotherState(p_n) == tree.LeftChild) {
+        if (tree.getBrotherState(p_n) == tree.LeftChild)
             code.push('0');
-        }
-        else {
+        else
             code.push('1');
-        }
         p_n = p_n->p_parent;
     }
 
@@ -212,7 +177,6 @@ Node * HuffmanTree::findLarge(Node *p_node){
     return large;
 }
 
-
 //编码函数
 bool HuffmanTree::encode(char * out_filename){
     //确认文件存在
@@ -225,7 +189,6 @@ bool HuffmanTree::encode(char * out_filename){
 //        cout << "error: can not open file to write!" << endl;
     }
 
-
     //读取字符，设置nyt节点为根节点
     char cbuffer;
     bool exist;
@@ -234,30 +197,16 @@ bool HuffmanTree::encode(char * out_filename){
     while (!is.eof()) { //末尾以-1表示输入的结束
         cbuffer = is.get();
         if (cbuffer != -1) {
-
             exist = false;
             auto it = leaves.find(cbuffer);
             if (it != leaves.end()) exist = true;
 
-//        auto existNode = buffers.begin();	//buffers的一个迭代器，当cbuffer存在于树中的时候，existNode指向该节点
-//        for (  ; existNode != buffers.end(); existNode++) {
-//            if (existNode->key == cbuffer) {
-//                code = existNode->value;
-//                for (int i = 0; '\0' != code[i]; i++) {
-//                    os << code[i];
-//                }
-//                exist = true;
-//
-//                break;
-//            }
-//        }
             if (exist) {
                 cout << cbuffer << " 在树中存在，编码为： " << leaves.at(cbuffer)->codeword << endl;
                 Node *root = leaves.at(cbuffer)->p;
                 weightAdd(root);
             }else {
                 //当字符不存在树中时，则新建子树，并替代原nyt节点
-
                 Node *c = new Node(nullptr, nullptr, nyt);
                 c->num = sum++;
                 c->weight = 1;
@@ -269,24 +218,14 @@ bool HuffmanTree::encode(char * out_filename){
                 tree.addNode(nyt, NYT, BinaryTree::LeftChild);
                 tree.addNode(nyt, c, BinaryTree::RightChild);
                 nyt->weight = 1;
-
                 //将编码值设为nyt+原字符值
                 code = getHuffmanCode(nyt);
-//            code = "0" + code;
                 for (int i = 0; '\0' != code[i]; i++) {
                     os << code[i];
                 }
-//            os << cbuffer;
                 cout << cbuffer << "首次出现，设定编码为：" << code << endl;
 
-
-
-                //将新的字符放进buffers中
-//            auto* new_cm = new charMap();
-//            new_cm->key = cbuffer;
-//            new_cm->p = nyt->p_right;
-//            new_cm->value = getHuffmanCode(nyt->p_right);
-//            buffers.push_back(*new_cm);
+                //将新的字符放进leaves中
                 Leaf *newLeaf = new Leaf();
                 newLeaf->key = cbuffer;
                 newLeaf->p = nyt->p_right;
@@ -307,6 +246,7 @@ bool HuffmanTree::encode(char * out_filename){
     // TODO:
     return false;
 }
+
 //从当前节点往上依次权重值加一，但是加一前先判断是否符合兄弟属性
 void HuffmanTree::weightAdd(Node * p_node){
     while (p_node != nullptr) {

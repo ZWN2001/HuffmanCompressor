@@ -27,10 +27,8 @@ public:
     ~BinaryTree();
     bool swap(Node* p_nodeA, Node* p_nodeB);
     static bool addNode(Node* p_parent, Node* p_child, Brother brotherState);
-//    Node* findNode(Node *p);
     void deleteNode(Node *p_node);
     Node* getRoot() {return p_root;}
-//    bool setNodeNum(Node* p_node,int num);
     Brother getBrotherState(Node *p_node);
     bool isAncestor(Node* p_nodeChild, Node* p_nodeAncestor);
 private:
