@@ -163,22 +163,22 @@ bool HuffmanTree::ReadFile(char * filename){
 std::string HuffmanTree::getHuffmanCode(Node *p_n){
     std::string huffmanCode = "";
     std::stack<Node *> stack;
-    std::deque<char> code;
+    std::queue<char> code;
 
     //逆向后推，当为左孩子的时候则置0，当为右孩子的时候则置1。
     while (p_n != tree.getRoot()) {
         if (tree.getBrotherState(p_n) == tree.LeftChild) {
-            code.push_back('0');
+            code.push('0');
         }
         else {
-            code.push_back('1');
+            code.push('1');
         }
         p_n = p_n->p_parent;
     }
 
     while (!code.empty()) {
-        huffmanCode += code.back();
-        code.pop_back();
+        huffmanCode += code.front();
+        code.pop();
     }
     return huffmanCode;
 }
@@ -228,17 +228,17 @@ bool HuffmanTree::encode(char * out_filename){
 
     //读取字符，设置nyt节点为根节点
     char cbuffer;
+    bool exist;
+    std::string code;
     Node *nyt = tree.getRoot();
-    while (!is.eof()) {
+    while (!is.eof()) { //末尾以-1表示输入的结束
         cbuffer = is.get();
-        bool exist = false;
-        std::string code;
-        try {
+        if (cbuffer != -1) {
+
+            exist = false;
             auto it = leaves.find(cbuffer);
             if (it != leaves.end()) exist = true;
-        }catch (const char* msg){
 
-        }
 //        auto existNode = buffers.begin();	//buffers的一个迭代器，当cbuffer存在于树中的时候，existNode指向该节点
 //        for (  ; existNode != buffers.end(); existNode++) {
 //            if (existNode->key == cbuffer) {
@@ -251,56 +251,57 @@ bool HuffmanTree::encode(char * out_filename){
 //                break;
 //            }
 //        }
-        if (exist) {
-            cout << cbuffer << " 在树中存在，编码为： " << endl;
-            Node *root = leaves.at(cbuffer)->p;
-            weightAdd(root);
-        }
-        else {
-            //当字符不存在树中时，则新建子树，并替代原nyt节点
-            Node *c = new Node(nullptr, nullptr, nyt);
-            c->num = sum++;
-            c->weight = 1;
+            if (exist) {
+                cout << cbuffer << " 在树中存在，编码为： " << leaves.at(cbuffer)->codeword << endl;
+                Node *root = leaves.at(cbuffer)->p;
+                weightAdd(root);
+            }else {
+                //当字符不存在树中时，则新建子树，并替代原nyt节点
 
-            Node *NYT = new Node(nullptr, nullptr, nyt);
-            NYT->num = sum++;
-            NYT->weight = 0;
+                Node *c = new Node(nullptr, nullptr, nyt);
+                c->num = sum++;
+                c->weight = 1;
 
-            tree.addNode(nyt, NYT, BinaryTree::LeftChild);
-            tree.addNode(nyt, c, BinaryTree::RightChild);
-            nyt->weight = 1;
+                Node *NYT = new Node(nullptr, nullptr, nyt);
+                NYT->num = sum++;
+                NYT->weight = 0;
 
-            //将编码值设为nyt+原字符值
-            code = getHuffmanCode(nyt);
+                tree.addNode(nyt, NYT, BinaryTree::LeftChild);
+                tree.addNode(nyt, c, BinaryTree::RightChild);
+                nyt->weight = 1;
+
+                //将编码值设为nyt+原字符值
+                code = getHuffmanCode(nyt);
 //            code = "0" + code;
-            for (int i = 0; '\0' != code[i]; i++) {
-                os << code[i];
-            }
+                for (int i = 0; '\0' != code[i]; i++) {
+                    os << code[i];
+                }
 //            os << cbuffer;
-            cout << cbuffer << "首次出现，设定编码为：" << code  << endl;
+                cout << cbuffer << "首次出现，设定编码为：" << code << endl;
 
 
 
-            //将新的字符放进buffers中
+                //将新的字符放进buffers中
 //            auto* new_cm = new charMap();
 //            new_cm->key = cbuffer;
 //            new_cm->p = nyt->p_right;
 //            new_cm->value = getHuffmanCode(nyt->p_right);
 //            buffers.push_back(*new_cm);
-            Leaf* newLeaf = new Leaf();
-            newLeaf->key = cbuffer;
-            newLeaf->p = nyt->p_right;
-            newLeaf->codeword = getHuffmanCode(nyt->p_right);
-            leaves.insert(pair<char,Leaf*>(cbuffer,newLeaf));
+                Leaf *newLeaf = new Leaf();
+                newLeaf->key = cbuffer;
+                newLeaf->p = nyt->p_right;
+                newLeaf->codeword = getHuffmanCode(nyt->p_right);
+                leaves.insert(pair<char, Leaf *>(cbuffer, newLeaf));
 
-            //依次增加权重
-            Node *root = nyt->p_parent;
-            weightAdd(root);
+                //依次增加权重
+                Node *root = nyt->p_parent;
+                weightAdd(root);
 
-            //设置新的nyt节点为原nyt节点的左孩子
-            nyt = nyt->p_left;
+                //设置新的nyt节点为原nyt节点的左孩子
+                nyt = nyt->p_left;
+            }
+
         }
-
     }
 
     // TODO:
@@ -326,6 +327,7 @@ void HuffmanTree::weightAdd(Node * p_node){
                 }
         }
         p_node->weight++;
+        unsigned long  long  a;
         cout << "节点" << p_node->num << "权重值加1" << "为：" << p_node->weight << endl;
         p_node = p_node->p_parent;
     }

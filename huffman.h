@@ -1,6 +1,7 @@
 #pragma once
 #include <fstream>
 #include <map>
+#include <unordered_map>
 
 using std::ifstream;
 using std::ofstream;
@@ -37,13 +38,7 @@ private:
 
 };
 
-struct Leaf{
-    char key;
-    int level;
-    int n;
-    std::string codeword;
-    Node* p;
-};
+
 
 
 class HuffmanTree
@@ -61,6 +56,14 @@ private:
     static int sum;
     BinaryTree tree;
 
+    struct Leaf{
+        char key;
+        int level;
+        int n;
+        std::string codeword;
+        Node* p;
+    };
+
     //存储已存在字符的哈夫曼编码的结构
 //    struct charMap{
 //        char key;
@@ -75,5 +78,5 @@ private:
     ifstream is;
     ofstream os;
 
-    std::map<char,Leaf*> leaves;//所有现存的叶子
+    std::unordered_map<char,Leaf*> leaves;//所有现存的叶子
 };
