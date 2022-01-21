@@ -159,7 +159,7 @@ Node * HuffmanTree::findLarge(Node *p_node){
             if (p->weight == p_node->weight) {
                 //如果large不在同权重下，则置large为p
                 if (large->weight != p->weight)  large = p;
-                //同权重下的large比p大，也就是说p在large下方，则置large为p
+                //同权重下的large比p大，也就是说p在large上方，则置large为p
                 else if(large->num > p->num)  large = p;
             }
             p = p->p_left;
