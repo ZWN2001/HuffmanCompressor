@@ -117,7 +117,8 @@ HuffmanTree::~HuffmanTree(){
     is.close();
 }
 
-bool HuffmanTree::ReadFile(char * filename){
+bool HuffmanTree::ReadFile(const std::string& str){
+    char* filename = (char *)str.data();
     is.open(filename, std::ios_base::in);
     if (!is.is_open()) {
 //        cout << "error: " << filename << " is not exist!" << endl;
@@ -178,12 +179,13 @@ Node * HuffmanTree::findLarge(Node *p_node){
 }
 
 //编码函数
-bool HuffmanTree::encode(char * out_filename){
+bool HuffmanTree::encode(const std::string& str){
     //确认文件存在
     if (!is.is_open()) {
 //        cout << "error: no file read!" << endl;
         return false;
     }
+    char* out_filename = (char *)str.data();
     os.open(out_filename, std::ios_base::out);
     if (!os.is_open()) {
 //        cout << "error: can not open file to write!" << endl;
@@ -274,12 +276,9 @@ void HuffmanTree::weightAdd(Node * p_node){
 
 int main(){
     HuffmanTree huff;
-    char* s;
     string str = "../iHaveADream.txt";
-    s = (char *)str.data();
-    huff.ReadFile(s);
+    huff.ReadFile(str);
     str = "../iHaveADream_output.txt";
-    s = (char *)str.data();
-    huff.encode(s);
+    huff.encode(str);
     return 0;
 }

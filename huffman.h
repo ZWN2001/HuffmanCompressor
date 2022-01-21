@@ -39,9 +39,9 @@ public:
 
     HuffmanTree();
     ~HuffmanTree();
-    bool ReadFile(char * filename);
+    bool ReadFile(const std::string& str);
 
-    bool encode(char * out_filename);
+    bool encode(const std::string& str);
 private:
     void weightAdd(Node* p_node);
 
