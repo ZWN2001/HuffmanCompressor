@@ -267,7 +267,6 @@ void HuffmanTree::weightAdd(Node * p_node){
                 }
         }
         p_node->weight++;
-        unsigned long  long  a;
         cout << "节点" << p_node->num << "权重值加1" << "为：" << p_node->weight << endl;
         p_node = p_node->p_parent;
     }
