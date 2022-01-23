@@ -16,9 +16,10 @@ class SideMenu extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const SizedBox(height: 6,),
                   SizedBox(
-                      width: 110,
-                      height: 110,
+                      width: 100,
+                      height: 100,
                       child:  ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.asset("assets/images/avatar.jpg"),
@@ -35,14 +36,7 @@ class SideMenu extends StatelessWidget {
               )
           ),
           DrawerListTile(
-            title: "初始化",
-            svgSrc: "assets/icons/init.svg",
-            press: () {
-
-            },
-          ),
-          DrawerListTile(
-            title: "编码",
+            title: "初始化&编码",
             svgSrc: "assets/icons/encode.svg",
             press: () {
 
@@ -51,13 +45,6 @@ class SideMenu extends StatelessWidget {
           DrawerListTile(
             title: "解码",
             svgSrc: "assets/icons/decode.svg",
-            press: () {
-
-            },
-          ),
-          DrawerListTile(
-            title: "编码结果",
-            svgSrc: "assets/icons/print.svg",
             press: () {
 
             },
