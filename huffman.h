@@ -27,7 +27,7 @@ public:
     static bool addNode(Node* p_parent, Node* p_child, Brother brotherState);
     void deleteNode(Node *p_node);
     Node* getRoot() {return p_root;}
-    Brother getBrotherState(Node *p_node);
+    static Brother getBrotherState(Node *p_node);
     bool isAncestor(Node* p_nodeChild, Node* p_nodeAncestor);
 private:
     Node *p_root;
@@ -42,9 +42,10 @@ public:
     bool ReadFile(const std::string& str);
 
     bool encode(const std::string& str);
+    void setLevelAndN();
+    void printMap();
 private:
     void weightAdd(Node* p_node);
-
     static int sum;
     BinaryTree tree;
 

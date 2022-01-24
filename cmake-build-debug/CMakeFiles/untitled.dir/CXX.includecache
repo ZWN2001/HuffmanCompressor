@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-D:/My cpp place/untitled/huffman.h
+D:/myCppProject/untitled/huffman.h
 fstream
 -
 map
@@ -14,13 +14,15 @@ map
 unordered_map
 -
 
-D:/My cpp place/untitled/main.cpp
+D:/myCppProject/untitled/main.cpp
 iostream
 -
 stack
 -
 queue
 -
+cmath
+-
 huffman.h
-D:/My cpp place/untitled/huffman.h
+D:/myCppProject/untitled/huffman.h
 
