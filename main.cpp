@@ -119,10 +119,11 @@ HuffmanTree::~HuffmanTree(){
 }
 
 bool HuffmanTree::ReadFile(const std::string& str){
-    char* filename = (char *)str.data();
-    is.open(filename, std::ios_base::in);
+    is.close();
+    is.clear();
+    is.open(str, std::ios_base::in);
     if (!is.is_open()) {
-        cout << "error: " << filename << " is not exist!" << endl;
+        cout << "error: " << str << " is not exist!" << endl;
         return false;
     }
     return true;
@@ -179,19 +180,37 @@ Node * HuffmanTree::findLarge(Node *p_node){
     return large;
 }
 
-//编码函数
-bool HuffmanTree::encode(const std::string& str){
-    //确认文件存在
+//从当前节点往上依次权重值加一，但是加一前先判断是否符合兄弟属性
+void HuffmanTree::weightAdd(Node * p_node){
+    while (p_node != nullptr) {
+        Node* large = findLarge(p_node);
+        if (large != p_node && !tree.isAncestor(p_node, large)) {
+//            cout << "即将为节点" << p_node->num << "加一,但是同块最大节点为：" << large->num << ",权重值为：" << p_node->weight << endl;
+            tree.swap(large, p_node);
+            int temp;
+            temp = large->num;
+            large->num = p_node->num;
+            p_node->num = temp;
+
+            Leaf* l;
+            for (auto iterator = leaves.begin(); iterator != leaves.end(); iterator++) {
+                l = leaves.at(iterator->first);
+                l->codeword = getHuffmanCode(l->p);
+                leaves[iterator->first] = l;
+            }
+        }
+        p_node->weight++;
+//        cout << "节点" << p_node->num << "权重值加1" << "为：" << p_node->weight << endl;
+        p_node = p_node->p_parent;
+    }
+}
+
+//动态构建霍夫曼树
+bool HuffmanTree::buildTree(){
     if (!is.is_open()) {
         cout << "error: no file read!" << endl;
         return false;
     }
-    char* out_filename = (char *)str.data();
-    os.open(out_filename, std::ios_base::out);
-    if (!os.is_open()) {
-        cout << "error: can not open file to write!" << endl;
-    }
-
     //读取字符，设置nyt节点为根节点
     char cbuffer;
     bool exist;
@@ -199,14 +218,12 @@ bool HuffmanTree::encode(const std::string& str){
     Node *nyt = tree.getRoot();
     while (!is.eof()) { //末尾以-1表示输入的结束
         cbuffer = is.get();
-
         if (cbuffer != -1) {
             exist = false;
             auto it = leaves.find(cbuffer);
             if (it != leaves.end()) exist = true;
 
             if (exist) {
-                os<<leaves.at(cbuffer)->codeword;
                 cout << cbuffer << " 在树中存在，编码为： " << leaves.at(cbuffer)->codeword << endl;
                 Node *root = leaves.at(cbuffer)->p;
                 weightAdd(root);
@@ -224,12 +241,6 @@ bool HuffmanTree::encode(const std::string& str){
                 tree.addNode(nyt, NYT, BinaryTree::LeftChild);
                 tree.addNode(nyt, c, BinaryTree::RightChild);
                 nyt->weight = 1;
-                //将编码值设为nyt+原字符值
-                code = getHuffmanCode(nyt);
-                for (int i = 0; '\0' != code[i]; i++) {
-                    os << code[i];
-                }
-//                cout << cbuffer << "首次出现，设定编码为：" << code << endl;
 
                 //将新的字符放进leaves中
                 Leaf *newLeaf = new Leaf();
@@ -272,31 +283,28 @@ void HuffmanTree::setLevelAndN(){
         drop = 1;
     }
 }
-//从当前节点往上依次权重值加一，但是加一前先判断是否符合兄弟属性
-void HuffmanTree::weightAdd(Node * p_node){
-    while (p_node != nullptr) {
-        Node* large = findLarge(p_node);
-        if (large != p_node && !tree.isAncestor(p_node, large)) {
-//            cout << "即将为节点" << p_node->num << "加一,但是同块最大节点为：" << large->num << ",权重值为：" << p_node->weight << endl;
-                tree.swap(large, p_node);
-                int temp;
-                temp = large->num;
-                large->num = p_node->num;
-                p_node->num = temp;
 
-                Leaf* l;
-                for (auto iterator = leaves.begin(); iterator != leaves.end(); iterator++) {
-                    l = leaves.at(iterator->first);
-                    l->codeword = getHuffmanCode(l->p);
-                    leaves[iterator->first] = l;
-                }
-        }
-        p_node->weight++;
-//        cout << "节点" << p_node->num << "权重值加1" << "为：" << p_node->weight << endl;
-        p_node = p_node->p_parent;
+bool HuffmanTree::encode(const std::string& str){
+    //确认文件存在
+    if (!is.is_open()) {
+        cout << "error: no file read!" << endl;
+        return false;
     }
-}
+    os.open(str, std::ios_base::out);
+    if (!os.is_open()) {
+        cout << "error: can not open file to write!" << endl;
+    }
 
+    //读取字符，设置nyt节点为根节点
+    char cbuffer;
+    while (!is.eof()) { //末尾以-1表示输入的结束
+        cbuffer = is.get();
+        if (cbuffer != -1) {
+            os<<leaves[cbuffer]->codeword;
+        }
+    }
+    return false;
+}
 
 void HuffmanTree::printMap(){
     Leaf* l;
@@ -311,6 +319,10 @@ void HuffmanTree::printMap(){
 int main(){
     HuffmanTree huff;
     string str = "D:\\myCppProject\\untitled\\iHaveADream.txt";
+    huff.ReadFile(str);
+    huff.buildTree();
+
+    str = "D:\\myCppProject\\untitled\\iHaveADream.txt";
     huff.ReadFile(str);
     str = "../iHaveADream_output.txt";
     huff.encode(str);

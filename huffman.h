@@ -42,6 +42,7 @@ public:
     bool ReadFile(const std::string& str);
 
     bool encode(const std::string& str);
+    bool buildTree();
     void setLevelAndN();
     void printMap();
 private:
