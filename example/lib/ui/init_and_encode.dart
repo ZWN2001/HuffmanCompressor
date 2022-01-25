@@ -1,7 +1,10 @@
 
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:huffman_compressor_example/widgets/titleRow.dart';
 
 class InitAndEncodePage extends StatelessWidget {
 
@@ -18,7 +21,8 @@ class InitAndEncodePage extends StatelessWidget {
         backgroundColor: Colors.blue[600],
       ),
       body: Obx(()=>initLogic.encoding.value?encodingWidget():
-      (initLogic.encoded.value?encodedWidget(context):unencodeWidget())),
+      (initLogic.encoded.value?encodedWidget(context):
+      (initLogic.fileChoosed.value?fileChoseWidget():fileUnchoseWidget()))),
     );
   }
 
@@ -41,18 +45,12 @@ class InitAndEncodePage extends StatelessWidget {
     );
   }
 
-  Widget unencodeWidget(){
+  Widget fileUnchoseWidget(){
     final initLogic = Get.put(InitLogic());
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Obx(()=>Text(
-              initLogic.filePath.value,
-            style: const TextStyle(
-              fontSize: 20
-            ),
-          )),
           const SizedBox(height: 24,),
           ElevatedButton(
             child: const Text('选择文件'),
@@ -63,61 +61,84 @@ class InitAndEncodePage extends StatelessWidget {
             },
           ),
           const SizedBox(height: 24,),
-          ElevatedButton(
-            child: const Text('开始初始化并编码'),
-            onPressed: ()  {
-              initLogic.encoding.value = true;
-              //TODO:调用cpp进行编码
-              Future.delayed(const Duration(seconds: 3),(){
-                if(initLogic.encode()) {
-                  initLogic.encoding.value = false;
-                  initLogic.encoded.value = true;
-                }
-              });
-
-            },
-          ),
         ],
       ),
     );
   }
 
-
-  Widget encodedWidget(BuildContext context){
+  Widget fileChoseWidget(){
+    final initLogic = Get.put(InitLogic());
     return Column(
       children: [
-        titleRow(),
-        Expanded(child:resultRow())
-        // resultRow(),
+        const TitleRow(firstTitle: '信息',secondTitle:'文件内容',),
+        Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                    child:Center(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 24,),
+                          Obx(()=>Text(
+                            '文件路径:\n${initLogic.filePath.value}',
+                            style: const TextStyle(
+                                fontSize: 16
+                            ),
+                          )),
+                          const SizedBox(height: 128,),
+                          ElevatedButton(
+                              child: const Text('重新选择文件'),
+                              onPressed: ()  {
+                                initLogic.readFile().then((value){
+                                  initLogic.filePath.value = value;
+                                });
+                              },
+                            ),
+                          const SizedBox(height: 24,),
+                          ElevatedButton(
+                            child: const Text('开始初始化并编码'),
+                            onPressed: ()  {
+                              initLogic.encoding.value = true;
+                              //TODO:调用cpp进行编码
+                              Future.delayed(const Duration(seconds: 3),(){
+                                if(initLogic.encode()) {
+                                  initLogic.encoding.value = false;
+                                  initLogic.encoded.value = true;
+                                }
+                              });
+                            },
+                          ),
+
+                          const SizedBox(height: 24,),
+                        ],
+                      ),
+                    )
+                ),
+                const VerticalDivider(color: Colors.blue,width: 1,),
+                Expanded(
+                  flex: 2,
+                  child: ListView(
+                      primary: false,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(8),
+                          child: Obx(()=>Text(
+                            initLogic.encodeString.value,
+                            maxLines: null,
+                          ),)
+                        )
+                      ]),),
+              ],
+            )),
       ],
     );
   }
 
-  Widget titleRow(){
-    return Row(
+  Widget encodedWidget(BuildContext context){
+    return Column(
       children: [
-        Expanded(
-          flex: 1,
-          child: Container(
-            color: Colors.green[300],
-            child: const ListTile(
-              title: Text('编码表'),
-            ),
-          ),
-        ),
-        const VerticalDivider(
-          color: Colors.blue,
-          width: 1,
-        ),
-        Expanded(
-          flex: 2,
-          child: Container(
-            color: Colors.green[300],
-            child: const ListTile(
-              title: Text('编码结果'),
-            ),
-          ),
-        ),
+        const TitleRow(firstTitle: '编码表',secondTitle: '编码结果',),
+        Expanded(child:resultRow())
       ],
     );
   }
@@ -210,7 +231,7 @@ class InitAndEncodePage extends StatelessWidget {
                 primary: false,
                   children: [
                 Container(
-                  margin: const EdgeInsets.all(6),
+                  margin: const EdgeInsets.all(8),
                   child: Text(
                     str,
                     maxLines: null,
@@ -228,7 +249,9 @@ class InitLogic extends GetxController {
 
   RxBool encoded = false.obs;
   RxBool encoding = false.obs;
+  RxBool fileChoosed = false.obs;
   RxString filePath = ''.obs;
+  RxString encodeString = ''.obs;
 
   // @override
   // void onInit() {
@@ -242,6 +265,11 @@ class InitLogic extends GetxController {
       allowedExtensions: ['txt'],
     );
     if (result != null) {
+      File file = File(result.files.single.path!);
+      await file.readAsString().then((value){
+        encodeString.value = value;
+        fileChoosed.value = true;
+      });
       return result.files.single.path!;
     } else {
       return '';

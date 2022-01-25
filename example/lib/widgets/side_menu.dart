@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_toastr/flutter_toastr.dart';
+import 'package:get/get.dart';
+import 'package:huffman_compressor_example/ui/main_screen.dart';
 
 class SideMenu extends StatelessWidget {
   const SideMenu({
@@ -9,6 +11,7 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mainScreenController = Get.put(MainScreenLogic());
     return Drawer(
       child: ListView(
         children: [
@@ -39,14 +42,14 @@ class SideMenu extends StatelessWidget {
             title: "初始化&编码",
             svgSrc: "assets/icons/encode.svg",
             press: () {
-
+              mainScreenController.selectedItem.value = 0;
             },
           ),
           DrawerListTile(
             title: "解码",
             svgSrc: "assets/icons/decode.svg",
             press: () {
-
+              mainScreenController.selectedItem.value = 1;
             },
           ),
           DrawerListTile(

@@ -1,6 +1,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:huffman_compressor_example/ui/decode.dart';
 import 'package:huffman_compressor_example/ui/init_and_encode.dart';
 import 'package:huffman_compressor_example/widgets/side_menu.dart';
 import 'package:huffman_compressor_example/widgets/windows_buttons.dart';
@@ -52,6 +53,7 @@ class MainScreenLogic extends GetxController{
   RxInt selectedItem = 0.obs;
   final List<Widget> list = [
     const InitAndEncodePage(),
+    const DecodePage(),
   ];
 }
 
