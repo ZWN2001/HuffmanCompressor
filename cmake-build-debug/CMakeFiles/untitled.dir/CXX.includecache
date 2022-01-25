@@ -6,15 +6,11 @@
 
 #IncludeRegexTransform: 
 
-D:/myCppProject/untitled/huffman.h
-fstream
--
-map
--
-unordered_map
--
+D:/myCppProject/untitled/controller.cpp
+huffman.cpp
+D:/myCppProject/untitled/huffman.cpp
 
-D:/myCppProject/untitled/main.cpp
+D:/myCppProject/untitled/huffman.cpp
 iostream
 -
 stack
@@ -25,4 +21,12 @@ cmath
 -
 huffman.h
 D:/myCppProject/untitled/huffman.h
+
+D:/myCppProject/untitled/huffman.h
+fstream
+-
+map
+-
+unordered_map
+-
 

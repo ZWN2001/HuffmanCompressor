@@ -33,36 +33,39 @@ private:
     Node *p_root;
 };
 
-class HuffmanTree
-{
-public:
+struct Leaf{
+    char key;
+    int level;
+    int n;
+    std::string codeword;
+    Node* p;
+};
 
+class HuffmanTree{
+public:
     HuffmanTree();
     ~HuffmanTree();
     bool ReadFile(const std::string& str);
-
     bool encode(const std::string& str);
     bool buildTree();
     void setLevelAndN();
     void printMap();
+    std::unordered_map<char,Leaf*> leaves;//所有现存的叶子
+    std::string encodeResult ;
 private:
     void weightAdd(Node* p_node);
+    std::string getHuffmanCode(Node *p);
+    Node * findLarge(Node *);
     static int sum;
     BinaryTree tree;
 
-    struct Leaf{
-        char key;
-        int level;
-        int n;
-        std::string codeword;
-        Node* p;
-    };
-
-    std::string getHuffmanCode(Node *p);
-    Node * findLarge(Node *);
-
     ifstream is;
     ofstream os;
-
-    std::unordered_map<char,Leaf*> leaves;//所有现存的叶子
 };
+
+//class Controller{
+//public:
+//    Controller();
+//    HuffmanTree huff;
+//
+//};

@@ -301,6 +301,7 @@ bool HuffmanTree::encode(const std::string& str){
         cbuffer = is.get();
         if (cbuffer != -1) {
             os<<leaves[cbuffer]->codeword;
+            encodeResult.append(leaves[cbuffer]->codeword);
         }
     }
     return false;
@@ -316,15 +317,5 @@ void HuffmanTree::printMap(){
         cout<<"n:"<<l->n<<endl;
     }
 }
-int main(){
-    HuffmanTree huff;
-    string str = "D:\\myCppProject\\untitled\\iHaveADream.txt";
-    huff.ReadFile(str);
-    huff.buildTree();
 
-    str = "D:\\myCppProject\\untitled\\iHaveADream.txt";
-    huff.ReadFile(str);
-    str = "../iHaveADream_output.txt";
-    huff.encode(str);
-    return 0;
-}
+//Controller::Controller() = default;
