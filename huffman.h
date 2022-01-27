@@ -51,14 +51,16 @@ public:
     bool buildTree();
     void setLevelAndN();
     void printMap();
+    void writeTree(const std::string& filename);
     std::unordered_map<char,Leaf*> leaves;//所有现存的叶子
     std::unordered_map<std::string,char> codewordMap;
-    std::string encodeResult ;
+    std::string encodeResult;
     std::string decodeResult;
 private:
     void weightAdd(Node* p_node);
     std::string getHuffmanCode(Node *p);
     Node * findLarge(Node *);
+    void getCodewordMap();
     static int sum;
     BinaryTree tree;
 

@@ -118,12 +118,12 @@ HuffmanTree::~HuffmanTree(){
     is.close();
 }
 
-bool HuffmanTree::ReadFile(const std::string& str){
+bool HuffmanTree::ReadFile(const std::string& filename){
     is.close();
     is.clear();
-    is.open(str, std::ios_base::in);
+    is.open(filename, std::ios_base::in);
     if (!is.is_open()) {
-        cout << "error: " << str << " is not exist!" << endl;
+        cout << "error: " << filename << " is not exist!" << endl;
         return false;
     }
     return true;
@@ -225,8 +225,8 @@ bool HuffmanTree::buildTree(){
 
             if (exist) {
                 cout << cbuffer << " 在树中存在，编码为： " << leaves.at(cbuffer)->codeword << endl;
-                Node *root = leaves.at(cbuffer)->p;
-                weightAdd(root);
+                Node *existNode = leaves.at(cbuffer)->p;
+                weightAdd(existNode);
             }
             else {
                 //当字符不存在树中时，则新建子树，并替代原nyt节点
@@ -284,13 +284,16 @@ void HuffmanTree::setLevelAndN(){
     }
 }
 
-bool HuffmanTree::encode(const std::string& str){
+//根据编码表对文件内容进行编码
+bool HuffmanTree::encode(const std::string& osstr){
     //确认文件存在
     if (!is.is_open()) {
         cout << "error: no file read!" << endl;
         return false;
     }
-    os.open(str, std::ios_base::out);
+    os.close();
+    os.clear();
+    os.open(osstr, std::ios_base::out);
     if (!os.is_open()) {
         cout << "error: can not open file to write!" << endl;
     }
@@ -308,25 +311,38 @@ bool HuffmanTree::encode(const std::string& str){
 }
 
 bool HuffmanTree::decodeWithMap() {
-    ReadFile("../");//TODO:改文件名
-    char cbuffer;
+    getCodewordMap();
+    char cbuffer,addChar;
+    string codeword;
     while (!is.eof()) { //末尾以-1表示输入的结束
         cbuffer = is.get();
         if (cbuffer != -1) {
-            string codeword(1,cbuffer);
-//            if (leaves[codewo])
-//            decodeResult += leaves[cbuffer]->key;
+            codeword = "";
+            codeword += cbuffer;
+            while (codewordMap.find(codeword) == codewordMap.end()){
+                addChar = is.get();
+                if (is.eof()&&addChar == -1){
+                    return false;
+                }
+                codeword += addChar;
+            }
+            decodeResult += codewordMap[codeword];
         }
+    }
+    cout<<"decodeResult"<<decodeResult;
+    return true;
+}
+
+void HuffmanTree::getCodewordMap() {
+    Leaf* l;
+    for (auto & leave : leaves) {
+        l = leaves.at(leave.first);
+        codewordMap[l->codeword] = l->key;
     }
 }
 
-
-
-
-
 void HuffmanTree::printMap(){
     Leaf* l;
-
     for (auto & leave : leaves) {
         l = leaves.at(leave.first);
         cout<<"codeword:"<<l->codeword<<endl;
@@ -335,4 +351,16 @@ void HuffmanTree::printMap(){
     }
 }
 
-//Controller::Controller() = default;
+void HuffmanTree::writeTree(const std::string& filename) {
+    os.close();
+    os.clear();
+    os.open(filename, std::ios_base::out);
+    if (!os.is_open()) {
+        cout << "error: can not open file to write!" << endl;
+    }
+    Leaf* l;
+    for (auto & leave : leaves) {
+        l = leaves.at(leave.first);
+        os<<l->key<<":"<<l->codeword<<":"<<l->level<<":"<<l->n<<endl;
+    }
+}

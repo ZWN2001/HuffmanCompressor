@@ -9,7 +9,13 @@ string buildTreeAndEncode(const string& filename){
     return huff.encodeResult;
 }
 
-void getCodeMap(){
+string decode(const string& filename){
+    huff.ReadFile(filename);
+    huff.decodeWithMap();
+    return huff.decodeResult;
+}
+
+void getCodeMapJsonStr(){
     std::string jsonStr;
     Json::Value map;
     Json::StreamWriterBuilder writerBuilder;
@@ -31,20 +37,25 @@ void getCodeMap(){
 }
 
 void getEncodedString(){
-   cout<< huff.encodeResult<<endl;
+   cout<< "encodeResult"<<huff.encodeResult<<endl;
 }
 
 
 
 int main(){
-
-    string str = "D:\\myCppProject\\untitled\\iHaveADream.txt";
+    string str = "../tobetrans.txt";
     buildTreeAndEncode(str);
-    str = "D:\\myCppProject\\untitled\\iHaveADream.txt";
+
+    str = "../tobetrans.txt";
     huff.ReadFile(str);
-    str = "../iHaveADream_output.txt";
+    str = "../codefile.txt";
     huff.encode(str);
-    getCodeMap();
+
+    getCodeMapJsonStr();
+
     getEncodedString();
+
+    decode("../codefile.txt");
+
     return 0;
 }
