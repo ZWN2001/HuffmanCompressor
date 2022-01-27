@@ -307,6 +307,23 @@ bool HuffmanTree::encode(const std::string& str){
     return false;
 }
 
+bool HuffmanTree::decodeWithMap() {
+    ReadFile("../");//TODO:改文件名
+    char cbuffer;
+    while (!is.eof()) { //末尾以-1表示输入的结束
+        cbuffer = is.get();
+        if (cbuffer != -1) {
+            string codeword(1,cbuffer);
+//            if (leaves[codewo])
+//            decodeResult += leaves[cbuffer]->key;
+        }
+    }
+}
+
+
+
+
+
 void HuffmanTree::printMap(){
     Leaf* l;
 
