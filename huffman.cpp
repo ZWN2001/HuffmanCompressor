@@ -385,19 +385,77 @@ bool HuffmanTree::writeTree(const std::string& filename) {
     Leaf* l;
     for (auto & leave : leaves) {
         l = leaves.at(leave.first);
-        os<<l->key<<":"<<l->codeword<<":"<<l->level<<":"<<l->n<<endl;
+        os<<l->key<<":"<<l->codeword<<":"<<l->level<<":"<<l->n<<":"<<l->p->num<<":"<<l->p->weight<<endl;
     }
     return true;
 }
 
-bool HuffmanTree::readTree(const std::string& filename) {
+vector<string>  split(const string& str,const string& delim) { //将分割后的子字符串存储在vector中
+    vector<string> res;
+    if (str.empty()) return res;
+
+    string strs = str + delim; //*****扩展字符串以方便检索最后一个分隔出的字符串
+    size_t pos;
+    size_t size = strs.size();
+
+    for (int i = 0; i < size; ++i) {
+        pos = strs.find(delim, i); //pos为分隔符第一次出现的位置，从i到pos之前的字符串是分隔出来的字符串
+        if (pos < size) { //如果查找到，如果没有查找到分隔符，pos为string::npos
+            string s = strs.substr(i, pos - i);//*****从i开始长度为pos-i的子字符串
+            res.push_back(s);//两个连续空格之间切割出的字符串为空字符串，这里没有判断s是否为空，所以最后的结果中有空字符的输出，
+            i = pos + delim.size() - 1;
+        }
+
+    }
+    return res;
+}
+
+bool HuffmanTree::readTree(const std::string &filename) {
     bool read = ReadFile(filename);
     if (!read) {
         return false;
     }
+    auto *newTree = new BinaryTree(0, 0);
+    Node *root = newTree->getRoot();
+    Node *nodeNow;
     string line;
-    while (getline(is,line)){
+    vector<string> info;
+    int i;
+    Node *newNode;
+    int newNum;
+//    l->key<<":"<<l->codeword<<":"<<l->level<<":"<<l->n<<":"<<l->p->num<<":"<<l->p->weight
+//         0            1                  2          3               4                5
+    while (getline(is, line)) {
+        info = split(line, ":");
+        if (info.size() != 6) return false;
+        nodeNow = new Node(nullptr, nullptr, nullptr);//从叶子节点开始
+        nodeNow->weight = stoi(info[5]);
+        nodeNow->num = stoi(info[4]);
+        for (i = 1; i < info[1].length() - 1; ++i) {
+            newNum = (nodeNow->num - 1) / 2;
+            if (allRebuildNodes.find(newNum) == allRebuildNodes.end()) {//不存在就创建
+                newNode = new Node(nullptr, nullptr, nullptr);
+                newNode->num = newNum;
+                allRebuildNodes[newNum] = newNode;
+            } else {//存在
+                newNode = allRebuildNodes[newNum];
+            }
+            newNode->weight += nodeNow->weight;
 
+            if (nodeNow->num % 2 == 0) {//偶数，说明是父节点的左子树
+                newTree->addNode(newNode, nodeNow, BinaryTree::LeftChild);
+            } else {//奇数，右子树
+                newTree->addNode(newNode, nodeNow, BinaryTree::RightChild);
+            }
+            nodeNow = newNode;//上移，准备下一次处理
+        }
+        // 根节点单独处理
+        if (nodeNow->num % 2 == 0) {//偶数，说明是父节点的左子树
+            newTree->addNode(root, nodeNow, BinaryTree::LeftChild);
+        } else {//奇数，右子树
+            newTree->addNode(root, nodeNow, BinaryTree::RightChild);
+        }
     }
-
+    tree = newTree;
+    return true;
 }

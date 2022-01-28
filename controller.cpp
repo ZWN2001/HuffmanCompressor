@@ -61,8 +61,8 @@ int main(){
     getEncodedString();
 
     decode("../codefile.txt");
-    huff->writeTree("../hfmtree");
-    huff->readTree("../hfmtree");
+    huff->writeTree("../hfmtree.txt");
+    huff->readTree("../hfmtree.txt");
 //    refresh();
     return 0;
 }

@@ -57,6 +57,7 @@ public:
     std::unordered_map<std::string,char> codewordMap;
     std::string encodeResult;
     std::string decodeResult;
+    BinaryTree* tree;
 private:
     void weightAdd(Node* p_node);
     std::string getHuffmanCode(Node *p);
@@ -64,7 +65,7 @@ private:
     void getCodewordMap();
     void setLevelAndN();
     static int sum;
-    BinaryTree* tree;
+    std::unordered_map<int,Node*> allRebuildNodes;
 
     ifstream is;
     ofstream os;
