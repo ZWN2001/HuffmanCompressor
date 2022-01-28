@@ -111,7 +111,7 @@ BinaryTree::Brother BinaryTree::getBrotherState(Node *p_node){
 }
 
 //哈夫曼树成员函数实现
-HuffmanTree::HuffmanTree():tree(0,0){}
+HuffmanTree::HuffmanTree(){tree = new BinaryTree(0,0);}
 
 HuffmanTree::~HuffmanTree(){
     os.close();
@@ -136,8 +136,8 @@ std::string HuffmanTree::getHuffmanCode(Node *p_n){
     std::stack<char> code;
 
     //逆向后推，当为左孩子的时候则置0，当为右孩子的时候则置1。
-    while (p_n != tree.getRoot()) {
-        if (tree.getBrotherState(p_n) == tree.LeftChild)
+    while (p_n != tree->getRoot()) {
+        if (tree->getBrotherState(p_n) == tree->LeftChild)
             code.push('0');
         else
             code.push('1');
@@ -154,7 +154,7 @@ std::string HuffmanTree::getHuffmanCode(Node *p_n){
 //找到所在块中最大节点编号的节点
 Node * HuffmanTree::findLarge(Node *p_node){
     std::stack<Node *> stack;
-    Node *p = tree.getRoot();//从根节点开始
+    Node *p = tree->getRoot();//从根节点开始
     Node *large = p;
     while (p || !stack.empty()) {
         if (p != nullptr) {
@@ -174,7 +174,7 @@ Node * HuffmanTree::findLarge(Node *p_node){
         }
     }
     //large不可能是根节点，当large为根节点时返回原节点
-    if (large == tree.getRoot()) {
+    if (large == tree->getRoot()) {
         return p_node;
     }
     return large;
@@ -184,9 +184,9 @@ Node * HuffmanTree::findLarge(Node *p_node){
 void HuffmanTree::weightAdd(Node * p_node){
     while (p_node != nullptr) {
         Node* large = findLarge(p_node);
-        if (large != p_node && !tree.isAncestor(p_node, large)) {
+        if (large != p_node && !tree->isAncestor(p_node, large)) {
 //            cout << "即将为节点" << p_node->num << "加一,但是同块最大节点为：" << large->num << ",权重值为：" << p_node->weight << endl;
-            tree.swap(large, p_node);
+            tree->swap(large, p_node);
             int temp;
             temp = large->num;
             large->num = p_node->num;
@@ -215,7 +215,7 @@ bool HuffmanTree::buildTree(){
     char cbuffer;
     bool exist;
     std::string code;
-    Node *nyt = tree.getRoot();
+    Node *nyt = tree->getRoot();
     while (!is.eof()) { //末尾以-1表示输入的结束
         cbuffer = is.get();
         if (cbuffer != -1) {
@@ -238,8 +238,8 @@ bool HuffmanTree::buildTree(){
                 NYT->num = sum++;
                 NYT->weight = 0;
 
-                tree.addNode(nyt, NYT, BinaryTree::LeftChild);
-                tree.addNode(nyt, c, BinaryTree::RightChild);
+                tree->addNode(nyt, NYT, BinaryTree::LeftChild);
+                tree->addNode(nyt, c, BinaryTree::RightChild);
                 nyt->weight = 1;
 
                 //将新的字符放进leaves中

@@ -2,17 +2,17 @@
 #include "./dist/json/json.h"
 #include "./dist/jsoncpp.cpp"
 //Controller controller;
-HuffmanTree huff;
+HuffmanTree* huff = new HuffmanTree();
 string buildTreeAndEncode(const string& filename){
-    huff.ReadFile(filename);
-    huff.buildTree();
-    return huff.encodeResult;
+    huff->ReadFile(filename);
+    huff->buildTree();
+    return huff->encodeResult;
 }
 
 string decode(const string& filename){
-    huff.ReadFile(filename);
-    huff.decodeWithMap();
-    return huff.decodeResult;
+    huff->ReadFile(filename);
+    huff->decodeWithMap();
+    return huff->decodeResult;
 }
 
 void getCodeMapJsonStr(){
@@ -23,8 +23,8 @@ void getCodeMapJsonStr(){
     Leaf* l;
     string str;
     int i = 0;
-    for (auto & leave : huff.leaves) {
-        l = huff.leaves.at(leave.first);
+    for (auto & leave : huff->leaves) {
+        l = huff->leaves.at(leave.first);
         string s(1,l->key);
         str = s+":"+l->codeword;
         map[i] = str;
@@ -37,7 +37,15 @@ void getCodeMapJsonStr(){
 }
 
 void getEncodedString(){
-   cout<< "encodeResult"<<huff.encodeResult<<endl;
+   cout<< "encodeResult"<<huff->encodeResult<<endl;
+}
+
+void refresh(){
+delete huff;
+huff = new HuffmanTree();
+    getCodeMapJsonStr();
+
+    getEncodedString();
 }
 
 
@@ -47,15 +55,15 @@ int main(){
     buildTreeAndEncode(str);
 
     str = "../tobetrans.txt";
-    huff.ReadFile(str);
+    huff->ReadFile(str);
     str = "../codefile.txt";
-    huff.encode(str);
+    huff->encode(str);
 
     getCodeMapJsonStr();
 
     getEncodedString();
 
     decode("../codefile.txt");
-
+    refresh();
     return 0;
 }

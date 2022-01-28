@@ -62,7 +62,7 @@ private:
     Node * findLarge(Node *);
     void getCodewordMap();
     static int sum;
-    BinaryTree tree;
+    BinaryTree* tree;
 
     ifstream is;
     ofstream os;
