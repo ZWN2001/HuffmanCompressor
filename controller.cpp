@@ -43,9 +43,6 @@ void getEncodedString(){
 void refresh(){
 delete huff;
 huff = new HuffmanTree();
-    getCodeMapJsonStr();
-
-    getEncodedString();
 }
 
 
@@ -64,6 +61,8 @@ int main(){
     getEncodedString();
 
     decode("../codefile.txt");
-    refresh();
+    huff->writeTree("../hfmtree");
+    huff->readTree("../hfmtree");
+//    refresh();
     return 0;
 }

@@ -49,9 +49,10 @@ public:
     bool encode(const std::string& str);
     bool decodeWithMap();
     bool buildTree();
-    void setLevelAndN();
+    void removeNYT(Node* nyt);
     void printMap();
-    void writeTree(const std::string& filename);
+    bool writeTree(const std::string& filename);
+    bool readTree(const std::string& filename);
     std::unordered_map<char,Leaf*> leaves;//所有现存的叶子
     std::unordered_map<std::string,char> codewordMap;
     std::string encodeResult;
@@ -61,6 +62,7 @@ private:
     std::string getHuffmanCode(Node *p);
     Node * findLarge(Node *);
     void getCodewordMap();
+    void setLevelAndN();
     static int sum;
     BinaryTree* tree;
 

@@ -259,28 +259,52 @@ bool HuffmanTree::buildTree(){
 
         }
     }
+    removeNYT(nyt);
     setLevelAndN();
     printMap();
     return false;
 }
 
+//给所有叶子节点设置level与n
 void HuffmanTree::setLevelAndN(){
     Leaf* l;
     string  str ;
+//    int i;
     int n = 0,drop = 1;//认为初始落差是1，初始n为-1可以避免最后再减一
     for (auto & leave : leaves) {
         l = leaves.at(leave.first);
         str = l->codeword;
         l->level = std::ceil(l->p->num*0.5);
+        drop = l->level;
         for (char i : str) {
             if (i == '1')
                 n += pow(2,drop-1);
-            drop++;
+            drop--;
         }
         l->n = n;
-
         n = 0;
-        drop = 1;
+    }
+}
+
+//完成树的构建，删除nyt节点并将nyt的兄弟叶子节点上移
+void HuffmanTree::removeNYT(Node* nyt) {
+    //如果只有一个编码元素或者没有，那删不删无所谓
+    if (leaves.size()>1){
+        Node* brotherNode;
+        Node* pp_node;//父节点的父节点
+        pp_node = nyt->p_parent->p_parent;
+        brotherNode = nyt->p_parent->p_right;
+        pp_node->p_left = brotherNode;
+        Leaf* l;
+        for (auto & leave : leaves) {
+            l = leaves.at(leave.first);
+            if (l->p == brotherNode){
+                l->codeword = l->codeword.substr(0,l->codeword.length()-1);
+                l->p = brotherNode;
+                l->p->num = l->p->num - 1;
+                cout<<"removeNYT"<<l->codeword<<endl;
+            }
+        }
     }
 }
 
@@ -329,7 +353,7 @@ bool HuffmanTree::decodeWithMap() {
             decodeResult += codewordMap[codeword];
         }
     }
-    cout<<"decodeResult"<<decodeResult;
+    cout<<"decodeResult"<<decodeResult<<endl;
     return true;
 }
 
@@ -351,16 +375,29 @@ void HuffmanTree::printMap(){
     }
 }
 
-void HuffmanTree::writeTree(const std::string& filename) {
+bool HuffmanTree::writeTree(const std::string& filename) {
     os.close();
     os.clear();
     os.open(filename, std::ios_base::out);
     if (!os.is_open()) {
-        cout << "error: can not open file to write!" << endl;
+        return -1;
     }
     Leaf* l;
     for (auto & leave : leaves) {
         l = leaves.at(leave.first);
         os<<l->key<<":"<<l->codeword<<":"<<l->level<<":"<<l->n<<endl;
     }
+    return true;
+}
+
+bool HuffmanTree::readTree(const std::string& filename) {
+    bool read = ReadFile(filename);
+    if (!read) {
+        return false;
+    }
+    string line;
+    while (getline(is,line)){
+
+    }
+
 }
