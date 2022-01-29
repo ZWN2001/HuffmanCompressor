@@ -410,7 +410,7 @@ vector<string>  split(const string& str,const string& delim) { //将分割后的
     return res;
 }
 
-void sumWeight(Leaf* leaf, BinaryTree* newTree){
+void sumWeight(Leaf* leaf){
     Node* p_parent;
     Node* node = leaf->p;
     while (node->p_parent != nullptr){
@@ -460,25 +460,21 @@ bool HuffmanTree::readTree(const std::string &filename) {
             }
             if (nodeNow->num % 2 == 0 && newNode->p_left == nullptr) {//偶数，说明是父节点的左子树
                 newTree->addNode(newNode, nodeNow, BinaryTree::LeftChild);
-//                newNode->weight += nodeNow->weight;
             } else if (nodeNow->num % 2 == 1 &&  newNode->p_right == nullptr){//奇数，右子树
                 newTree->addNode(newNode, nodeNow, BinaryTree::RightChild);
-//                newNode->weight += nodeNow->weight;
             }
             nodeNow = newNode;//上移，准备下一次处理
         }
         // 根节点单独处理
         if (nodeNow->num % 2 == 0 && root->p_left == nullptr) {//偶数，说明是父节点的左子树
             newTree->addNode(root, nodeNow, BinaryTree::LeftChild);
-//            root->weight += nodeNow->weight;
         } else if (  root->p_right == nullptr){//奇数，右子树
             newTree->addNode(root, nodeNow, BinaryTree::RightChild);
-//            root->weight += nodeNow->weight;
         }
     }
     for (auto & leave : allRebuildLeafNodes) {
         leaf = allRebuildLeafNodes.at(leave.first);
-        sumWeight(leaf,newTree);
+        sumWeight(leaf);
     }
     tree = newTree;
     return true;
