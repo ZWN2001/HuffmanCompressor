@@ -65,7 +65,8 @@ private:
     void getCodewordMap();
     void setLevelAndN();
     static int sum;
-    std::unordered_map<int,Node*> allRebuildNodes;
+    std::unordered_map<int,Node*> allRebuildNewNodes;
+    std::unordered_map<int,Leaf*> allRebuildLeafNodes;
 
     ifstream is;
     ofstream os;

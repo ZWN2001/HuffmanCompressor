@@ -410,6 +410,15 @@ vector<string>  split(const string& str,const string& delim) { //将分割后的
     return res;
 }
 
+void sumWeight(Leaf* leaf, BinaryTree* newTree){
+    Node* p_parent;
+    Node* node = leaf->p;
+    while (node->p_parent != nullptr){
+        p_parent = node->p_parent;
+        p_parent->weight += leaf->p->weight;
+        node = p_parent;
+    }
+}
 bool HuffmanTree::readTree(const std::string &filename) {
     bool read = ReadFile(filename);
     if (!read) {
@@ -418,6 +427,7 @@ bool HuffmanTree::readTree(const std::string &filename) {
     auto *newTree = new BinaryTree(0, 0);
     Node *root = newTree->getRoot();
     Node *nodeNow;
+    Leaf* leaf;
     string line;
     vector<string> info;
     int i;
@@ -431,30 +441,44 @@ bool HuffmanTree::readTree(const std::string &filename) {
         nodeNow = new Node(nullptr, nullptr, nullptr);//从叶子节点开始
         nodeNow->weight = stoi(info[5]);
         nodeNow->num = stoi(info[4]);
-        for (i = 1; i < info[1].length() - 1; ++i) {
+        leaf = new Leaf();
+        leaf->key = info[0][0];
+        leaf->codeword = info[1];
+        leaf->level = stoi(info[2]);
+        leaf->n = stoi(info[3]);
+        leaf->p = nodeNow;
+        allRebuildLeafNodes[nodeNow->num] = leaf;
+        for (i = 1; i < info[1].length(); ++i) {
             newNum = (nodeNow->num - 1) / 2;
-            if (allRebuildNodes.find(newNum) == allRebuildNodes.end()) {//不存在就创建
+            if (allRebuildNewNodes.find(newNum) == allRebuildNewNodes.end()) {//不存在就创建
                 newNode = new Node(nullptr, nullptr, nullptr);
                 newNode->num = newNum;
-                allRebuildNodes[newNum] = newNode;
+                newNode->weight = 0;
+                allRebuildNewNodes[newNum] = newNode;
             } else {//存在
-                newNode = allRebuildNodes[newNum];
+                newNode = allRebuildNewNodes[newNum];
             }
-            newNode->weight += nodeNow->weight;
-
-            if (nodeNow->num % 2 == 0) {//偶数，说明是父节点的左子树
+            if (nodeNow->num % 2 == 0 && newNode->p_left == nullptr) {//偶数，说明是父节点的左子树
                 newTree->addNode(newNode, nodeNow, BinaryTree::LeftChild);
-            } else {//奇数，右子树
+//                newNode->weight += nodeNow->weight;
+            } else if (nodeNow->num % 2 == 1 &&  newNode->p_right == nullptr){//奇数，右子树
                 newTree->addNode(newNode, nodeNow, BinaryTree::RightChild);
+//                newNode->weight += nodeNow->weight;
             }
             nodeNow = newNode;//上移，准备下一次处理
         }
         // 根节点单独处理
-        if (nodeNow->num % 2 == 0) {//偶数，说明是父节点的左子树
+        if (nodeNow->num % 2 == 0 && root->p_left == nullptr) {//偶数，说明是父节点的左子树
             newTree->addNode(root, nodeNow, BinaryTree::LeftChild);
-        } else {//奇数，右子树
+//            root->weight += nodeNow->weight;
+        } else if (  root->p_right == nullptr){//奇数，右子树
             newTree->addNode(root, nodeNow, BinaryTree::RightChild);
+//            root->weight += nodeNow->weight;
         }
+    }
+    for (auto & leave : allRebuildLeafNodes) {
+        leaf = allRebuildLeafNodes.at(leave.first);
+        sumWeight(leaf,newTree);
     }
     tree = newTree;
     return true;
