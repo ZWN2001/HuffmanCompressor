@@ -53,6 +53,7 @@ public:
     void printMap();
     bool writeTree(const std::string& filename);
     bool readTree(const std::string& filename);
+
     std::unordered_map<char,Leaf*> leaves;//所有现存的叶子
     std::unordered_map<std::string,char> codewordMap;
     std::string encodeResult;

@@ -390,7 +390,7 @@ bool HuffmanTree::writeTree(const std::string& filename) {
     return true;
 }
 
-vector<string>  split(const string& str,const string& delim) { //将分割后的子字符串存储在vector中
+vector<string> split(const string& str,const string& delim) { //将分割后的子字符串存储在vector中
     vector<string> res;
     if (str.empty()) return res;
 
@@ -419,6 +419,7 @@ void sumWeight(Leaf* leaf){
         node = p_parent;
     }
 }
+
 bool HuffmanTree::readTree(const std::string &filename) {
     bool read = ReadFile(filename);
     if (!read) {
