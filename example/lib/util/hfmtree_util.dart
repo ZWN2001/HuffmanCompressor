@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:huffman_compressor_example/bean/node.dart';
 
 class HfmtreeUtil{
-  static Map<int,TreeNode> buildTreeWithLeaves(Map<int,TreeNode> leaves){
+  static Map<int,TreeNode> buildTreeWithLeaves(List<TreeNode> leaves){
     int i = 0;
     int locateChild = 0,locateParent = 0;
     TreeNode newNode;
@@ -11,12 +11,12 @@ class HfmtreeUtil{
     bool isLeftChild = true,exist = true;
     Map<int,TreeNode> allNodes = {};
 
-    leaves.forEach((key, value) {
-      level = value.level;
-      n = value.n;
+    for(TreeNode leaf in leaves){
+      level = leaf.level;
+      n = leaf.n;
       locateChild = getLocate(level, n);
-      allNodes[locateChild] = value;
-      for(i = 0;i<value.codeword.length;i++){
+      allNodes[locateChild] = leaf;
+      for(i = 0;i<leaf.codeword.length;i++){
         level--;
         isLeftChild = n % 2 == 0;
         n = n ~/ 2;
@@ -36,17 +36,8 @@ class HfmtreeUtil{
         locateChild = locateParent;
         if(exist)break;
       }
-    });
+    }
     allNodes = _sumWeight(allNodes, leaves);
-    allNodes.forEach((key, value) {
-      print(value.level);
-      print(value.n);
-      print(value.weight);
-      print(value.parent);
-      print(value.rightChild);
-      print(value.leftChild);
-      print("--------------");
-    });
     return allNodes;
   }
 
@@ -61,19 +52,19 @@ class HfmtreeUtil{
     return allNodes;
   }
 
-  static Map<int,TreeNode> _sumWeight(Map<int,TreeNode> allNodes,Map<int,TreeNode> leaves){
+  static Map<int,TreeNode> _sumWeight(Map<int,TreeNode> allNodes,List<TreeNode> leaves){
     int level,n,locate;
-    leaves.forEach((key, value) {
-      level = -- value.level;
-      n = value.n ~/ 2;
+    for (TreeNode value in leaves) {
+      level =value.level;
+      n = value.n;
       locate = getLocate(level, n);
       while(allNodes[locate]!.parent != -1){
-        allNodes[locate]!.weight += value.num;
         level--;
         n = n ~/ 2;
         locate = getLocate(level, n);
+        allNodes[locate]!.weight += value.weight;
       }
-    });
+    }
     return allNodes;
   }
 

@@ -23,7 +23,7 @@ class HfmTreePage extends StatelessWidget {
 
 class HfmTreeLogic extends GetxController {
 
-  Map<int,TreeNode> leaves = {};
+  List<TreeNode> leaves = [];
   List<String> infos = [];
   late TreeNode node;
 
@@ -42,7 +42,7 @@ class HfmTreeLogic extends GetxController {
            infos = line.split(":");
            node = TreeNode(key: infos[0], codeword: infos[1], level: int.parse(infos[2]),
                n: int.parse(infos[3]), num: int.parse(infos[4]), weight: int.parse(infos[5]));
-           leaves[node.num] = node;
+           leaves.add(node);
          }).whenComplete((){
            HfmtreeUtil.buildTreeWithLeaves(leaves);
          });
