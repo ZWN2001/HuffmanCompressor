@@ -1,4 +1,3 @@
-//#include "stdafx.h"
 #include <iostream>
 #include <stack>
 #include <queue>
@@ -274,7 +273,7 @@ void HuffmanTree::setLevelAndN(){
     for (auto & leave : leaves) {
         l = leaves.at(leave.first);
         str = l->codeword;
-        l->level = std::ceil(l->p->num*0.5);
+        l->level = l->codeword.length();
         drop = l->level;
         for (char i : str) {
             if (i == '1')
@@ -375,6 +374,10 @@ void HuffmanTree::printMap(){
     }
 }
 
+int HuffmanTree::getLocate(int level, int n) {
+    return static_cast<int>(pow(2,level)) + n - 1;
+}
+
 bool HuffmanTree::writeTree(const std::string& filename) {
     os.close();
     os.clear();
@@ -425,6 +428,7 @@ bool HuffmanTree::readTree(const std::string &filename) {
     if (!read) {
         return false;
     }
+
     auto *newTree = new BinaryTree(0, 0);
     Node *root = newTree->getRoot();
     Node *nodeNow;
@@ -432,8 +436,10 @@ bool HuffmanTree::readTree(const std::string &filename) {
     string line;
     vector<string> info;
     int i;
-    Node *newNode;
-    int newNum;
+    Node *parentNode;
+    int locate;//用于唯一确定节点位置
+    int level, n;//临时变量
+    bool isLeftChild;
 //    l->key<<":"<<l->codeword<<":"<<l->level<<":"<<l->n<<":"<<l->p->num<<":"<<l->p->weight
 //         0            1                  2          3               4                5
     while (getline(is, line)) {
@@ -441,35 +447,43 @@ bool HuffmanTree::readTree(const std::string &filename) {
         if (info.size() != 6) return false;
         nodeNow = new Node(nullptr, nullptr, nullptr);//从叶子节点开始
         nodeNow->weight = stoi(info[5]);
-        nodeNow->num = stoi(info[4]);
+        nodeNow->num = 0;
         leaf = new Leaf();
         leaf->key = info[0][0];
         leaf->codeword = info[1];
         leaf->level = stoi(info[2]);
         leaf->n = stoi(info[3]);
         leaf->p = nodeNow;
-        allRebuildLeafNodes[nodeNow->num] = leaf;
+
+        level = leaf->level;
+        n = leaf->n;
+        locate = getLocate(level, n);
+        allRebuildLeafNodes[locate] = leaf;
         for (i = 1; i < info[1].length(); ++i) {
-            newNum = (nodeNow->num - 1) / 2;
-            if (allRebuildNewNodes.find(newNum) == allRebuildNewNodes.end()) {//不存在就创建
-                newNode = new Node(nullptr, nullptr, nullptr);
-                newNode->num = newNum;
-                newNode->weight = 0;
-                allRebuildNewNodes[newNum] = newNode;
+            level--;
+            isLeftChild = n % 2 == 0;
+            n = n / 2;
+            locate = getLocate(level,n);
+            if (allRebuildNewNodes.find(locate) == allRebuildNewNodes.end()) {//不存在就创建
+                parentNode = new Node(nullptr, nullptr, nullptr);
+                parentNode->num = 0;
+                parentNode->weight = 0;
+                allRebuildNewNodes[locate] = parentNode;
             } else {//存在
-                newNode = allRebuildNewNodes[newNum];
+                parentNode = allRebuildNewNodes[locate];
             }
-            if (nodeNow->num % 2 == 0 && newNode->p_left == nullptr) {//偶数，说明是父节点的左子树
-                newTree->addNode(newNode, nodeNow, BinaryTree::LeftChild);
-            } else if (nodeNow->num % 2 == 1 &&  newNode->p_right == nullptr){//奇数，右子树
-                newTree->addNode(newNode, nodeNow, BinaryTree::RightChild);
+            if (isLeftChild && parentNode->p_left == nullptr) {//偶数，说明是父节点的左子树
+                newTree->addNode(parentNode, nodeNow, BinaryTree::LeftChild);
+            } else if (!isLeftChild && parentNode->p_right == nullptr){//奇数，右子树
+                newTree->addNode(parentNode, nodeNow, BinaryTree::RightChild);
             }
-            nodeNow = newNode;//上移，准备下一次处理
+            nodeNow = parentNode;//上移，准备下一次处理
         }
+        isLeftChild = n % 2 == 0;
         // 根节点单独处理
-        if (nodeNow->num % 2 == 0 && root->p_left == nullptr) {//偶数，说明是父节点的左子树
+        if (isLeftChild && root->p_left == nullptr) {//偶数，说明是父节点的左子树
             newTree->addNode(root, nodeNow, BinaryTree::LeftChild);
-        } else if (  root->p_right == nullptr){//奇数，右子树
+        } else if (!isLeftChild && root->p_right == nullptr){//奇数，右子树
             newTree->addNode(root, nodeNow, BinaryTree::RightChild);
         }
     }

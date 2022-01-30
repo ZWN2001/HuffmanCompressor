@@ -11,7 +11,7 @@ using std::endl;
 
 struct Node {
     int weight;
-    int num;//节点标号
+    int num;//节点标号,在构建完树之后不要轻易使用这个变量做任何逻辑运算
     Node* p_left;
     Node* p_right;
     Node* p_parent;
@@ -65,6 +65,7 @@ private:
     Node * findLarge(Node *);
     void getCodewordMap();
     void setLevelAndN();
+    static int getLocate(int level, int n);
     static int sum;
     std::unordered_map<int,Node*> allRebuildNewNodes;
     std::unordered_map<int,Leaf*> allRebuildLeafNodes;
