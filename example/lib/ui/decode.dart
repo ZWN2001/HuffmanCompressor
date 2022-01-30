@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:huffman_compressor_example/widgets/titleRow.dart';
@@ -126,6 +128,10 @@ class DecodeLogic extends GetxController {
 
   bool decode(){
     return true;
+  }
+
+  List<String> jsonToList(String str){
+    return json.decode(str).sort((a,b)=>a.length.compareTo(b.length));
   }
 }
 
