@@ -439,7 +439,7 @@ bool HuffmanTree::readTree(const std::string &filename) {
     Node *parentNode;
     int locate;//用于唯一确定节点位置
     int level, n;//临时变量
-    bool isLeftChild;
+    bool isLeftChild,exist;
 //    l->key<<":"<<l->codeword<<":"<<l->level<<":"<<l->n<<":"<<l->p->num<<":"<<l->p->weight
 //         0            1                  2          3               4                5
     while (getline(is, line)) {
@@ -465,11 +465,13 @@ bool HuffmanTree::readTree(const std::string &filename) {
             n = n / 2;
             locate = getLocate(level,n);
             if (allRebuildNewNodes.find(locate) == allRebuildNewNodes.end()) {//不存在就创建
+                exist = false;
                 parentNode = new Node(nullptr, nullptr, nullptr);
                 parentNode->num = 0;
                 parentNode->weight = 0;
                 allRebuildNewNodes[locate] = parentNode;
             } else {//存在
+                exist = true;
                 parentNode = allRebuildNewNodes[locate];
             }
             if (isLeftChild && parentNode->p_left == nullptr) {//偶数，说明是父节点的左子树
@@ -477,15 +479,19 @@ bool HuffmanTree::readTree(const std::string &filename) {
             } else if (!isLeftChild && parentNode->p_right == nullptr){//奇数，右子树
                 newTree->addNode(parentNode, nodeNow, BinaryTree::RightChild);
             }
+            if (exist)break;//出现一个存在的节点就直接跳出循环
             nodeNow = parentNode;//上移，准备下一次处理
         }
-        isLeftChild = n % 2 == 0;
-        // 根节点单独处理
-        if (isLeftChild && root->p_left == nullptr) {//偶数，说明是父节点的左子树
-            newTree->addNode(root, nodeNow, BinaryTree::LeftChild);
-        } else if (!isLeftChild && root->p_right == nullptr){//奇数，右子树
-            newTree->addNode(root, nodeNow, BinaryTree::RightChild);
+        if (!exist){
+            isLeftChild = n % 2 == 0;
+            // 根节点单独处理
+            if (isLeftChild && root->p_left == nullptr) {//偶数，说明是父节点的左子树
+                newTree->addNode(root, nodeNow, BinaryTree::LeftChild);
+            } else if (!isLeftChild && root->p_right == nullptr){//奇数，右子树
+                newTree->addNode(root, nodeNow, BinaryTree::RightChild);
+            }
         }
+
     }
     for (auto & leave : allRebuildLeafNodes) {
         leaf = allRebuildLeafNodes.at(leave.first);
