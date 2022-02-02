@@ -6,26 +6,64 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:huffman_compressor_example/bean/node.dart';
 import 'package:huffman_compressor_example/util/hfmtree_util.dart';
+import 'package:huffman_compressor_example/widgets/hfmtree_widget.dart';
 
 class HfmTreePage extends StatelessWidget {
   const HfmTreePage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     final hfmTreeLogic = Get.put(HfmTreeLogic());
-    return Container(child: ElevatedButton(
-      child: Text('a'),
-      onPressed: (){
-        hfmTreeLogic.readFile();
-      },
-    ),);
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('霍夫曼树'),
+        toolbarHeight: 48,
+        backgroundColor: Colors.blue[600],
+      ),
+      body: Obx(()=>(!hfmTreeLogic.hfmFileChose.value)?unChoseFileWidget():
+      (hfmTreeLogic.building.value?buildingWidget():HfmtreeWidget(leaves: hfmTreeLogic.leaves,allNodes: hfmTreeLogic.allNodes,))),
+    // body: unChoseFileWidget(),
+    );
   }
+
+  Widget unChoseFileWidget(){
+    final hfmTreeLogic = Get.put(HfmTreeLogic());
+    return Center(
+      child: ElevatedButton(
+        child: const Text('选择文件'),
+        onPressed: () {
+          hfmTreeLogic.readFile();
+        },
+      ),);
+  }
+
+  Widget buildingWidget() {
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          CircularProgressIndicator(),
+          SizedBox(height: 12,),
+          Text(
+            '构建中',
+            style: TextStyle(
+                fontSize: 24
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
 }
 
 class HfmTreeLogic extends GetxController {
-
   List<TreeNode> leaves = [];
+  Map<int,TreeNode> allNodes = {};
   List<String> infos = [];
   late TreeNode node;
+  RxBool hfmFileChose = false.obs;
+  RxBool building = false.obs;
 
   Future<void> readFile() async {
      FilePicker.platform.pickFiles(
@@ -33,6 +71,8 @@ class HfmTreeLogic extends GetxController {
       allowedExtensions: ['txt'],
     ).then((value){
        if (value != null) {
+         hfmFileChose.value = true;
+         building.value = true;
          File(value.files.single.path!).openRead()
              .map(utf8.decode)
              .transform( const LineSplitter())
@@ -44,14 +84,12 @@ class HfmTreeLogic extends GetxController {
                n: int.parse(infos[3]), num: int.parse(infos[4]), weight: int.parse(infos[5]));
            leaves.add(node);
          }).whenComplete((){
-           HfmtreeUtil.buildTreeWithLeaves(leaves);
+           allNodes = HfmtreeUtil.buildTreeWithLeaves(leaves);
+           building.value = false;
          });
        }
     });
-
   }
-
-
 }
 
 class HfmTreeBinding extends Bindings {

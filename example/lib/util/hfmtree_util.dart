@@ -71,4 +71,14 @@ class HfmtreeUtil{
   static int getLocate(int level, int n){
     return (pow(2, level)  + n - 1).toInt();
   }
+
+  ///返回真正的层数
+  static int getHeight(List<TreeNode> leaves){
+    int height = 0;
+    if(leaves.isEmpty)return height;
+    for(TreeNode leaf in leaves){
+      if(leaf.level+1>height) height = leaf.level+1;
+    }
+    return height;
+  }
 }
