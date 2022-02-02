@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:huffman_compressor_example/bean/node.dart';
 
+import '../constant.dart';
+
 class HfmtreeUtil{
   static Map<int,TreeNode> buildTreeWithLeaves(List<TreeNode> leaves){
     int i = 0;
@@ -80,5 +82,21 @@ class HfmtreeUtil{
       if(leaf.level+1>height) height = leaf.level+1;
     }
     return height;
+  }
+
+  ///获取节点竖直偏移量
+  static int getNodeVerticalOffset(int level){
+    return Constant.MARGIN_DEFAULT_TOP + (level + 1) * Constant.MARGIN_EACH_LEVEL
+        + level * Constant.NODE_SIZE;
+  }
+
+  ///获取节点在层内的水平偏移量
+  ///首先要知道节点在中轴线左右是对称的
+  ///这个heiget是调用getHeiget获得的
+  static double getNodeHorizontalOffset(int level, int n,int height){
+    int drop = height - level - 1;
+    double ratio = (pow(2, level) - 1)/2 - n;
+    double eachMargin = Constant.MARGIN_EACH_NODE_HORIZONTIAL * pow(2, drop) + Constant.NODE_SIZE + 0.0;
+    return ratio * eachMargin;
   }
 }
