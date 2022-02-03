@@ -28,7 +28,7 @@ class HfmtreeWidgetView extends State<HfmtreeWidget>{
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return InteractiveViewer(child: Stack(
       children: [
         ///画板层（放在最底下）
         CustomPaint(
@@ -39,7 +39,7 @@ class HfmtreeWidgetView extends State<HfmtreeWidget>{
           children: hfmtreeWidgetLogic.nodeStackWidgets,
         ),),
       ],
-    );
+    ));
   }
 
 }
@@ -87,7 +87,7 @@ class BranchPainter extends CustomPainter {
     // 创建画笔
     final Paint paint = Paint()
       ..color = Colors.blue
-      ..strokeWidth = 4 //线宽
+      ..strokeWidth = 3 //线宽
       ..style = PaintingStyle.stroke //模式--线型
       ..isAntiAlias = true;
     if(lines.isNotEmpty){
