@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="runner"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\flutter\;CMake Files\flutter\ephemeral\;CMake Files\flutter\ephemeral\.plugin_symlinks\;CMake Files\flutter\ephemeral\.plugin_symlinks\bitsdojo_window_windows\;CMake Files\flutter\ephemeral\.plugin_symlinks\bitsdojo_window_windows\windows\;CMake Files\flutter\ephemeral\.plugin_symlinks\huffman_compressor\;CMake Files\flutter\ephemeral\.plugin_symlinks\huffman_compressor\windows\;CMake Files\runner\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="E:/software/MinGW64/mingw64/bin/mingw32-make.exe -f &quot;E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="E:/software/MinGW64/mingw64/bin/mingw32-make.exe -f &quot;E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="E:/software/MinGW64/mingw64/bin/mingw32-make.exe -f &quot;E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="E:/software/MinGW64/mingw64/bin/mingw32-make.exe -f &quot;E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="huffman_compressor_example">
+				<Option output="E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner/huffman_compressor_example.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-D_HAS_EXCEPTIONS=0"/>
+					<Add option="-D_DEBUG"/>
+					<Add option="-DNOMINMAX"/>
+					<Add option="-DUNICODE"/>
+					<Add option="-D_UNICODE"/>
+					<Add directory="E:/myAndroidProject/huffman_compressor/example/windows"/>
+					<Add directory="E:/myAndroidProject/huffman_compressor/example/windows/flutter/ephemeral"/>
+					<Add directory="E:/myAndroidProject/huffman_compressor/example/windows/flutter/ephemeral/cpp_client_wrapper/include"/>
+					<Add directory="E:/myAndroidProject/huffman_compressor/example/windows/flutter/ephemeral/.plugin_symlinks/bitsdojo_window_windows/windows/include"/>
+					<Add directory="E:/myAndroidProject/huffman_compressor/example/windows/flutter/ephemeral/.plugin_symlinks/huffman_compressor/windows/include"/>
+					<Add directory="E:/software/MinGW64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++"/>
+					<Add directory="E:/software/MinGW64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="E:/software/MinGW64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/backward"/>
+					<Add directory="E:/software/MinGW64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include"/>
+					<Add directory="E:/software/MinGW64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include-fixed"/>
+					<Add directory="E:/software/MinGW64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="E:/software/MinGW64/mingw64/bin/mingw32-make.exe -f &quot;E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner/Makefile&quot;  VERBOSE=1 huffman_compressor_example"/>
+					<CompileFile command="E:/software/MinGW64/mingw64/bin/mingw32-make.exe -f &quot;E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="E:/software/MinGW64/mingw64/bin/mingw32-make.exe -f &quot;E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="E:/software/MinGW64/mingw64/bin/mingw32-make.exe -f &quot;E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="huffman_compressor_example/fast">
+				<Option output="E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner/huffman_compressor_example.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner"/>
+				<Option object_output="./"/>
+				<Option type="0"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-D_HAS_EXCEPTIONS=0"/>
+					<Add option="-D_DEBUG"/>
+					<Add option="-DNOMINMAX"/>
+					<Add option="-DUNICODE"/>
+					<Add option="-D_UNICODE"/>
+					<Add directory="E:/myAndroidProject/huffman_compressor/example/windows"/>
+					<Add directory="E:/myAndroidProject/huffman_compressor/example/windows/flutter/ephemeral"/>
+					<Add directory="E:/myAndroidProject/huffman_compressor/example/windows/flutter/ephemeral/cpp_client_wrapper/include"/>
+					<Add directory="E:/myAndroidProject/huffman_compressor/example/windows/flutter/ephemeral/.plugin_symlinks/bitsdojo_window_windows/windows/include"/>
+					<Add directory="E:/myAndroidProject/huffman_compressor/example/windows/flutter/ephemeral/.plugin_symlinks/huffman_compressor/windows/include"/>
+					<Add directory="E:/software/MinGW64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++"/>
+					<Add directory="E:/software/MinGW64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="E:/software/MinGW64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/backward"/>
+					<Add directory="E:/software/MinGW64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include"/>
+					<Add directory="E:/software/MinGW64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include-fixed"/>
+					<Add directory="E:/software/MinGW64/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="E:/software/MinGW64/mingw64/bin/mingw32-make.exe -f &quot;E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner/Makefile&quot;  VERBOSE=1 huffman_compressor_example/fast"/>
+					<CompileFile command="E:/software/MinGW64/mingw64/bin/mingw32-make.exe -f &quot;E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="E:/software/MinGW64/mingw64/bin/mingw32-make.exe -f &quot;E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="E:/software/MinGW64/mingw64/bin/mingw32-make.exe -f &quot;E:/myAndroidProject/huffman_compressor/example/windows/cmake-build-debug/runner/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/flutter/generated_plugin_registrant.cc">
+			<Option target="huffman_compressor_example"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/flutter/generated_plugin_registrant.h">
+			<Option target="huffman_compressor_example"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/runner/Runner.rc">
+			<Option target="huffman_compressor_example"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/runner/flutter_window.cpp">
+			<Option target="huffman_compressor_example"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/runner/flutter_window.h">
+			<Option target="huffman_compressor_example"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/runner/main.cpp">
+			<Option target="huffman_compressor_example"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/runner/runner.exe.manifest">
+			<Option target="huffman_compressor_example"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/runner/utils.cpp">
+			<Option target="huffman_compressor_example"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/runner/utils.h">
+			<Option target="huffman_compressor_example"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/runner/win32_window.cpp">
+			<Option target="huffman_compressor_example"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/runner/win32_window.h">
+			<Option target="huffman_compressor_example"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/flutter/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\flutter\"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/flutter/generated_plugins.cmake">
+			<Option virtualFolder="CMake Files\flutter\"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/flutter/ephemeral/generated_config.cmake">
+			<Option virtualFolder="CMake Files\flutter\ephemeral\"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/flutter/ephemeral/.plugin_symlinks/bitsdojo_window_windows/windows/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\flutter\ephemeral\.plugin_symlinks\bitsdojo_window_windows\windows\"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/flutter/ephemeral/.plugin_symlinks/huffman_compressor/windows/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\flutter\ephemeral\.plugin_symlinks\huffman_compressor\windows\"/>
+		</Unit>
+		<Unit filename="E:/myAndroidProject/huffman_compressor/example/windows/runner/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\runner\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

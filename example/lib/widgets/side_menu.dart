@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_toastr/flutter_toastr.dart';
 import 'package:get/get.dart';
+import 'package:huffman_compressor_example/ui/init_and_encode.dart';
 import 'package:huffman_compressor_example/ui/main_screen.dart';
+import 'package:oktoast/oktoast.dart';
 
 class SideMenu extends StatelessWidget {
   const SideMenu({
@@ -12,6 +13,7 @@ class SideMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mainScreenController = Get.put(MainScreenLogic());
+    final initLogic = Get.put(InitLogic());
     return Drawer(
       child: Obx((){
         return ListView(
@@ -52,23 +54,31 @@ class SideMenu extends StatelessWidget {
               svgSrc: "assets/icons/decode.svg",
               isSelected: mainScreenController.selectedItem.value == 1,
               press: () {
-                mainScreenController.selectedItem.value = 1;
+                if(initLogic.encoded.isFalse){
+                  showToast('请先进行初始化和编码', position: ToastPosition.bottom);
+                }else{
+                  mainScreenController.selectedItem.value = 1;
+                }
               },
             ),
-            DrawerListTile(
-              title: "霍夫曼树",
-              svgSrc: "assets/icons/tree.svg",
-              isSelected: mainScreenController.selectedItem.value == 2,
-              press: () {
+          DrawerListTile(
+            title: "霍夫曼树",
+            svgSrc: "assets/icons/tree.svg",
+            isSelected: mainScreenController.selectedItem.value == 2,
+            press: () {
+              if (initLogic.encoded.isFalse) {
+                showToast('请先进行初始化和编码', position: ToastPosition.bottom);
+              } else {
                 mainScreenController.selectedItem.value = 2;
-              },
-            ),
-            Container(
+              }
+            },
+          ),
+          Container(
               margin: const EdgeInsets.fromLTRB(10, 8, 10, 0),
               child: ElevatedButton(
                 child: const Text('重置'),
                 onPressed: (){
-                  FlutterToastr.show( 'msg',context);
+                  showToast('re', position: ToastPosition.bottom);
                 },
               ),
             ),

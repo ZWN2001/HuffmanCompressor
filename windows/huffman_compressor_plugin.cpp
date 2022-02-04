@@ -1,6 +1,7 @@
 #include "include/huffman_compressor/huffman_compressor_plugin.h"
 
 // This must be included before many other Windows headers.
+#include <winsock.h>
 #include <windows.h>
 
 // For getPlatformVersion; remove unless needed for your plugin implementation.
@@ -13,7 +14,7 @@
 #include <map>
 #include <memory>
 #include <sstream>
-
+#include "include/huffman.cpp"
 namespace {
 
 class HuffmanCompressorPlugin : public flutter::Plugin {
@@ -30,6 +31,47 @@ class HuffmanCompressorPlugin : public flutter::Plugin {
       const flutter::MethodCall<flutter::EncodableValue> &method_call,
       std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);
 };
+
+    HuffmanTree* huff = new HuffmanTree();
+    string buildTreeAndEncode(const string& filename){
+        try {
+          huff->ReadFile(filename);
+        huff->buildTree();
+        huff->ReadFile(filename);
+        huff->encode("C:\\codefile\\codefile.txt");
+        }
+        catch (string e) {
+            return e;
+        }
+        return huff->encodeResult;
+    }
+
+    string decode(const string& filename){
+        huff->ReadFile(filename);
+        huff->decodeWithMap();
+        return huff->decodeResult;
+    }
+
+    string getCodeStr(){
+       string str;
+        Leaf* l;
+        for (auto & leave : huff->leaves) {
+            l = huff->leaves.at(leave.first);
+            string s(1,l->key);
+            str.append(s+":"+l->codeword);
+            str.append(",");
+        }
+        return  str;
+    }
+
+    string getEncodedString(){
+        return  huff->encodeResult;
+    }
+
+    void refresh(){
+        delete huff;
+        huff = new HuffmanTree();
+    }
 
 // static
 void HuffmanCompressorPlugin::RegisterWithRegistrar(
@@ -56,18 +98,24 @@ HuffmanCompressorPlugin::~HuffmanCompressorPlugin() {}
 void HuffmanCompressorPlugin::HandleMethodCall(
     const flutter::MethodCall<flutter::EncodableValue> &method_call,
     std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
-  if (method_call.method_name().compare("getPlatformVersion") == 0) {
-    std::ostringstream version_stream;
-    version_stream << "Windows ";
-    if (IsWindows10OrGreater()) {
-      version_stream << "10+";
-    } else if (IsWindows8OrGreater()) {
-      version_stream << "8";
-    } else if (IsWindows7OrGreater()) {
-      version_stream << "7";
-    }
-    result->Success(flutter::EncodableValue(version_stream.str()));
-  } else {
+    const auto *arguments = std::get_if<flutter::EncodableMap>(method_call.arguments());
+
+  if (method_call.method_name().compare("getEncodeResult") == 0) {
+      std::string filename,resultString;
+      std::ostringstream os;
+          auto filename_it = arguments->find(flutter::EncodableValue("filename"));
+          if (filename_it != arguments->end()){
+              filename = std::get<std::string>(filename_it->second);
+              resultString = buildTreeAndEncode(filename);
+              os<<resultString;
+          }
+          result->Success(flutter::EncodableValue(os.str()));
+  }
+  if (method_call.method_name().compare("getEncodeMap") == 0) {
+      std::ostringstream os;
+       os<<getCodeStr();
+        result->Success(flutter::EncodableValue(os.str()));
+    }else {
     result->NotImplemented();
   }
 }

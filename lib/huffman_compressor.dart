@@ -11,14 +11,20 @@ class HuffmanCompressor {
     return version;
   }
 
-  static Future<String?> getEncodeResult()  async {
-    final String? jsonString = await _channel.invokeMethod('getEncodeResult');
-    return jsonString;
+  static Future<String?> getEncodeResult(String filename)  async {
+    final String? encodeString = await _channel.invokeMethod('getEncodeResult',
+        {'filename':filename});
+    return encodeString;
   }
 
-  static Future<String?> getDecodeMapString()  async {
-    final String? jsonString = await _channel.invokeMethod('getDecodeMapString');
-    return jsonString;
+  static Future<String?> getEncodeMap()  async {
+    final String? encodeMap = await _channel.invokeMethod('getEncodeMap');
+    return encodeMap;
   }
+
+  // static Future<String?> getDecodeMapString()  async {
+  //   final String? jsonString = await _channel.invokeMethod('getDecodeMapString');
+  //   return jsonString;
+  // }
 
 }
