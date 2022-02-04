@@ -4,8 +4,8 @@
 //Controller controller;
 HuffmanTree* huff = new HuffmanTree();
 string buildTreeAndEncode(const string& filename){
-    huff->ReadFile(filename);
-    huff->buildTree();
+        huff->ReadFile(filename);
+        huff->buildTree();
     return huff->encodeResult;
 }
 
@@ -15,7 +15,7 @@ string decode(const string& filename){
     return huff->decodeResult;
 }
 
-void getCodeMapJsonStr(){
+string getCodeMapJsonStr(){
     std::string jsonStr;
     Json::Value map;
     Json::StreamWriterBuilder writerBuilder;
@@ -33,12 +33,12 @@ void getCodeMapJsonStr(){
     std::unique_ptr<Json::StreamWriter> jsonWriter(writerBuilder.newStreamWriter());
     jsonWriter->write(map, &os);
     jsonStr = os.str();
-    std::cout << jsonStr << std::endl;
+    return  jsonStr;
 }
 
-void getEncodedString(){
-   cout<< "encodeResult"<<huff->encodeResult<<endl;
-}
+//string getEncodedString(){
+//    return  huff->encodeResult;
+//}
 
 void refresh(){
 delete huff;
@@ -53,16 +53,16 @@ int main(){
 
     str = "../tobetrans.txt";
     huff->ReadFile(str);
-    str = "../codefile.txt";
+    str = "D:\\myCppProject\\untitled\\codefile.txt";
     huff->encode(str);
 
-    getCodeMapJsonStr();
+//    getCodeMapJsonStr();
 
-    getEncodedString();
+//    getEncodedString();
 
-    decode("../codefile.txt");
-    huff->writeTree("../hfmtree.txt");
-    huff->readTree("../hfmtree.txt");
+//    decode("../codefile.txt");
+//    huff->writeTree("../hfmtree.txt");
+//    huff->readTree("../hfmtree.txt");
 //    refresh();
     return 0;
 }

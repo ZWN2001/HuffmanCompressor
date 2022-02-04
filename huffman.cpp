@@ -277,7 +277,7 @@ void HuffmanTree::setLevelAndN(){
         drop = l->level;
         for (char i : str) {
             if (i == '1')
-                n += pow(2,drop-1);
+                n += int(pow(2,drop-1));
             drop--;
         }
         l->n = n;
@@ -324,12 +324,13 @@ bool HuffmanTree::encode(const std::string& osstr){
     //读取字符，设置nyt节点为根节点
     char cbuffer;
     while (!is.eof()) { //末尾以-1表示输入的结束
-        cbuffer = is.get();
+        cbuffer = char(is.get());
         if (cbuffer != -1) {
             os<<leaves[cbuffer]->codeword;
             encodeResult.append(leaves[cbuffer]->codeword);
         }
     }
+    os.close();
     return false;
 }
 
