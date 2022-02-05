@@ -78,7 +78,7 @@ class HuffmanCompressorPlugin : public flutter::Plugin {
         return  huff->decodeResult;
     }
 
-    void refresh(){
+    void reset(){
         delete huff;
         huff = new HuffmanTree();
     }
@@ -136,6 +136,10 @@ void HuffmanCompressorPlugin::HandleMethodCall(
             result->Error("");
         }
 
+    }
+    if (method_call.method_name().compare("reset") == 0) {
+        reset();
+        result->Success();
     }
 }
 

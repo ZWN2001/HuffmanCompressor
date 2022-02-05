@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:huffman_compressor/huffman_compressor.dart';
 import 'package:huffman_compressor_example/ui/init_and_encode.dart';
 import 'package:huffman_compressor_example/ui/main_screen.dart';
 import 'package:oktoast/oktoast.dart';
+
+import '../ui/decode.dart';
+import '../ui/hfmTree.dart';
 
 class SideMenu extends StatelessWidget {
   const SideMenu({
@@ -78,7 +82,15 @@ class SideMenu extends StatelessWidget {
               child: ElevatedButton(
                 child: const Text('重置'),
                 onPressed: (){
-                  showToast('re', position: ToastPosition.bottom);
+                  mainScreenController.selectedItem.value = 0;
+                  final initLogic = Get.put(InitLogic());
+                  final decodeLogic = Get.put(DecodeLogic());
+                  final hfmTreeLogic = Get.put(HfmTreeLogic());
+                  initLogic.reset();
+                  decodeLogic.reset();
+                  hfmTreeLogic.reset();
+                  HuffmanCompressor.reset();
+                  showToast('重置成功', position: ToastPosition.bottom);
                 },
               ),
             ),

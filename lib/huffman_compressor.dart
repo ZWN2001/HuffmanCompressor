@@ -27,4 +27,7 @@ class HuffmanCompressor {
     return result;
   }
 
+  static Future<void> reset()  async {
+    await _channel.invokeMethod('reset');
+  }
 }

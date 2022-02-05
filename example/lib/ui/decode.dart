@@ -19,20 +19,20 @@ class DecodePage extends StatelessWidget {
         toolbarHeight: 48,
         backgroundColor: Colors.blue[600],
       ),
-      body: decodeBody(),
+      body: _decodeBody(),
     );
   }
 
-  Widget decodeBody(){
+  Widget _decodeBody(){
     return Column(
     children: [
       const TitleRow(firstTitle: '解码内容',secondTitle: '解码结果',),
-      Expanded(child: resultRow(),),
+      Expanded(child: _resultRow(),),
     ],
     );
   }
 
-  Widget resultRow(){
+  Widget _resultRow(){
     final decodeLogic = Get.put(DecodeLogic());
     return Row(
       children: [
@@ -53,13 +53,13 @@ class DecodePage extends StatelessWidget {
               ]),
         ),
         const VerticalDivider(color: Colors.blue,width: 1,),
-        Obx(()=>decodeLogic.decoding.value?decodingWidget():
-        (decodeLogic.decoded.value?decodedWidget():undecodeWidget())),
+        Obx(()=>decodeLogic.decoding.value?_decodingWidget():
+        (decodeLogic.decoded.value?_decodedWidget():_undecodeWidget())),
       ],
     );
   }
 
-  Widget decodingWidget() {
+  Widget _decodingWidget() {
     return Expanded(
       flex: 2,
       child: Column(
@@ -79,7 +79,7 @@ class DecodePage extends StatelessWidget {
     );
   }
 
-  Widget undecodeWidget(){
+  Widget _undecodeWidget(){
     final decodeLogic = Get.put(DecodeLogic());
     return Expanded(
       flex: 2,
@@ -108,7 +108,7 @@ class DecodePage extends StatelessWidget {
     );
   }
 
-  Widget decodedWidget(){
+  Widget _decodedWidget(){
     final decodeLogic = Get.put(DecodeLogic());
     return  Expanded(
       flex: 2,
@@ -138,10 +138,10 @@ class DecodeLogic extends GetxController {
   RxString decodeString = ''.obs;
 
   @override
-  Future<void> onInit() async {
+  void onInit()  {
     super.onInit();
     File file = File("C:\\codefile\\codefile.txt");
-    await file.readAsString().then((value){
+     file.readAsString().then((value){
       decodeString.value = value;
     });
   }
@@ -155,9 +155,12 @@ class DecodeLogic extends GetxController {
     return true;
   }
 
-  // List<String> jsonToList(String str){
-  //   return json.decode(str).sort((a,b)=>a.length.compareTo(b.length));
-  // }
+  void reset(){
+    decoded.value = false;
+    decoding.value = false;
+    decodeResult = '';
+    decodeString.value = '';
+  }
 }
 
 class DecodeBinding extends Bindings {

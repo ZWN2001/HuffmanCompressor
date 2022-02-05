@@ -23,13 +23,13 @@ class InitAndEncodePage extends StatelessWidget {
         toolbarHeight: 48,
         backgroundColor: Colors.blue[600],
       ),
-      body: Obx(()=>initLogic.encoding.value?encodingWidget():
-      (initLogic.encoded.value?encodedWidget(context):
-      (initLogic.fileChoosed.value?fileChoseWidget():fileUnchoseWidget()))),
+      body: Obx(()=>initLogic.encoding.value?_encodingWidget():
+      (initLogic.encoded.value?_encodedWidget(context):
+      (initLogic.fileChoosed.value?_fileChoseWidget():_fileUnchoseWidget()))),
     );
   }
 
-  Widget encodingWidget() {
+  Widget _encodingWidget() {
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -48,7 +48,7 @@ class InitAndEncodePage extends StatelessWidget {
     );
   }
 
-  Widget fileUnchoseWidget(){
+  Widget _fileUnchoseWidget(){
     final initLogic = Get.put(InitLogic());
     return Center(
       child: Column(
@@ -69,7 +69,7 @@ class InitAndEncodePage extends StatelessWidget {
     );
   }
 
-  Widget fileChoseWidget(){
+  Widget _fileChoseWidget(){
     final initLogic = Get.put(InitLogic());
     return Column(
       children: [
@@ -143,16 +143,16 @@ class InitAndEncodePage extends StatelessWidget {
     );
   }
 
-  Widget encodedWidget(BuildContext context){
+  Widget _encodedWidget(BuildContext context){
     return Column(
       children: [
         const TitleRow(firstTitle: '编码表',secondTitle: '编码结果',),
-        Expanded(child:resultRow())
+        Expanded(child:_resultRow())
       ],
     );
   }
 
-  Widget resultRow(){
+  Widget _resultRow(){
     final initLogic = Get.put(InitLogic());
     return Row(
       children: [
@@ -202,11 +202,6 @@ class InitLogic extends GetxController {
   RxString encodeString = ''.obs;
   String encodeResult = "";
   List encodeMap = [];
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  //
-  // }
 
   Future<String> readFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -247,12 +242,16 @@ class InitLogic extends GetxController {
     }
     return true;
   }
-  //
-  // @override
-  // void onClose() {
-  //
-  // }
 
+  void reset(){
+    encoded.value = false;
+    encoding.value = false;
+    fileChoosed.value = false;
+    filePath.value = '';
+    encodeString.value = '';
+    encodeResult = '';
+    encodeMap = [];
+  }
 }
 
 class InitBinding extends Bindings {

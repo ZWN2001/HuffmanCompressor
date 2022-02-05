@@ -19,13 +19,13 @@ class HfmTreePage extends StatelessWidget {
         toolbarHeight: 48,
         backgroundColor: Colors.blue[600],
       ),
-      body: Obx(()=>(!hfmTreeLogic.hfmFileChose.value)?unChoseFileWidget():
-      (hfmTreeLogic.building.value?buildingWidget():HfmtreeWidget(leaves: hfmTreeLogic.leaves,allNodes: hfmTreeLogic.allNodes,))),
+      body: Obx(()=>(!hfmTreeLogic.hfmFileChose.value)?_unChoseFileWidget():
+      (hfmTreeLogic.building.value?_buildingWidget():HfmtreeWidget(leaves: hfmTreeLogic.leaves,allNodes: hfmTreeLogic.allNodes,))),
     // body: unChoseFileWidget(),
     );
   }
 
-  Widget unChoseFileWidget(){
+  Widget _unChoseFileWidget(){
     final hfmTreeLogic = Get.put(HfmTreeLogic());
     return Center(
       child: ElevatedButton(
@@ -36,7 +36,7 @@ class HfmTreePage extends StatelessWidget {
       ),);
   }
 
-  Widget buildingWidget() {
+  Widget _buildingWidget() {
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -60,8 +60,8 @@ class HfmTreePage extends StatelessWidget {
 class HfmTreeLogic extends GetxController {
   List<TreeNode> leaves = [];
   Map<int,TreeNode> allNodes = {};
-  List<String> infos = [];
-  late TreeNode node;
+  List<String> _infos = [];
+  late TreeNode _node;
   RxBool hfmFileChose = false.obs;
   RxBool building = false.obs;
 
@@ -79,16 +79,24 @@ class HfmTreeLogic extends GetxController {
              .forEach((line) {
 //    l->key<<":"<<l->codeword<<":"<<l->level<<":"<<l->n<<":"<<l->p->num<<":"<<l->p->weight
 //       0            1                  2            3               4                 5
-           infos = line.split(":");
-           node = TreeNode(key: infos[0], codeword: infos[1], level: int.parse(infos[2]),
-               n: int.parse(infos[3]), num: int.parse(infos[4]), weight: int.parse(infos[5]));
-           leaves.add(node);
+           _infos = line.split(":");
+           _node = TreeNode(key: _infos[0], codeword: _infos[1], level: int.parse(_infos[2]),
+               n: int.parse(_infos[3]), num: int.parse(_infos[4]), weight: int.parse(_infos[5]));
+           leaves.add(_node);
          }).whenComplete((){
            allNodes = HfmtreeUtil.buildTreeWithLeaves(leaves);
            building.value = false;
          });
        }
     });
+  }
+
+  void reset(){
+    leaves = [];
+    allNodes = {};
+    _infos = [];
+    hfmFileChose.value = false;
+    building.value = false;
   }
 }
 
