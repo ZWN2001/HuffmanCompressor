@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:huffman_compressor/huffman_compressor.dart';
+import 'package:huffman_compressor_example/constant.dart';
 import 'package:huffman_compressor_example/widgets/titleRow.dart';
 import 'package:oktoast/oktoast.dart';
 
@@ -130,6 +131,9 @@ class InitAndEncodePage extends StatelessWidget {
                           child: Obx(()=>Text(
                             initLogic.encodeString.value,
                             maxLines: null,
+                              style: const TextStyle(
+                                  fontSize: Constant.FONT_SIZE
+                              )
                           ),)
                         )
                       ]),),
@@ -176,6 +180,9 @@ class InitAndEncodePage extends StatelessWidget {
                   child: Text(
                     initLogic.encodeResult,
                     maxLines: null,
+                      style: const TextStyle(
+                          fontSize: Constant.FONT_SIZE
+                      )
                   ),
                 )
               ]),

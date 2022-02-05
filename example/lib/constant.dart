@@ -4,4 +4,5 @@ class Constant{
   static const int MARGIN_EACH_LEVEL = 24;
   static const int MARGIN_EACH_NODE_HORIZONTIAL = 56;
   static const int NODE_SIZE = 32;
+  static const double FONT_SIZE = 18;
 }

@@ -1,8 +1,11 @@
-import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:huffman_compressor/huffman_compressor.dart';
+import 'package:huffman_compressor_example/constant.dart';
 import 'package:huffman_compressor_example/widgets/titleRow.dart';
+import 'package:oktoast/oktoast.dart';
 
 class DecodePage extends StatelessWidget {
   const DecodePage({Key? key}) : super(key: key);
@@ -31,8 +34,6 @@ class DecodePage extends StatelessWidget {
 
   Widget resultRow(){
     final decodeLogic = Get.put(DecodeLogic());
-    String str = '11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111'
-        '11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111';
     return Row(
       children: [
         Expanded(
@@ -41,10 +42,13 @@ class DecodePage extends StatelessWidget {
               children: [
                 Container(
                   margin: const EdgeInsets.all(8),
-                  child: Text(
-                    str,
+                  child: Obx(()=>Text(
+                    decodeLogic.decodeString.value,
                     maxLines: null,
-                  ),
+                      style: const TextStyle(
+                          fontSize: Constant.FONT_SIZE
+                      )
+                  ),),
                 )
               ]),
         ),
@@ -87,11 +91,14 @@ class DecodePage extends StatelessWidget {
               child: const Text('开始解码'),
               onPressed: (){
                 decodeLogic.decoding.value = true;
-                //TODO:调用cpp进行编码
-                Future.delayed(const Duration(seconds: 3),(){
-                  if(decodeLogic.decode()) {
+                decodeLogic.decode().then((value){
+                  if(value){
                     decodeLogic.decoding.value = false;
                     decodeLogic.decoded.value = true;
+                  }else{
+                    showToast('解码失败',position: ToastPosition.bottom);
+                    decodeLogic.decoding.value = false;
+                    decodeLogic.decoded.value = false;
                   }
                 });
               },
@@ -102,8 +109,7 @@ class DecodePage extends StatelessWidget {
   }
 
   Widget decodedWidget(){
-    String str = '11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111'
-        '11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111';
+    final decodeLogic = Get.put(DecodeLogic());
     return  Expanded(
       flex: 2,
       child: ListView(
@@ -112,8 +118,11 @@ class DecodePage extends StatelessWidget {
             Container(
               margin: const EdgeInsets.all(8),
               child: Text(
-                str,
+                decodeLogic.decodeResult,
                 maxLines: null,
+                style: const TextStyle(
+                  fontSize: Constant.FONT_SIZE
+                )
               ),
             )
           ]),
@@ -125,14 +134,30 @@ class DecodePage extends StatelessWidget {
 class DecodeLogic extends GetxController {
   RxBool decoded = false.obs;
   RxBool decoding = false.obs;
+  String decodeResult = '';
+  RxString decodeString = ''.obs;
 
-  bool decode(){
+  @override
+  Future<void> onInit() async {
+    super.onInit();
+    File file = File("C:\\codefile\\codefile.txt");
+    await file.readAsString().then((value){
+      decodeString.value = value;
+    });
+  }
+
+  Future<bool> decode() async {
+    await HuffmanCompressor.getDecodeResult().then((value){
+      if(value == ''||value == null||value.isEmpty) return false;
+      decodeResult = value;
+      return true;
+    });
     return true;
   }
 
-  List<String> jsonToList(String str){
-    return json.decode(str).sort((a,b)=>a.length.compareTo(b.length));
-  }
+  // List<String> jsonToList(String str){
+  //   return json.decode(str).sort((a,b)=>a.length.compareTo(b.length));
+  // }
 }
 
 class DecodeBinding extends Bindings {

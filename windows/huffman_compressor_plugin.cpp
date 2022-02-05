@@ -38,7 +38,8 @@ class HuffmanCompressorPlugin : public flutter::Plugin {
           huff->ReadFile(filename);
         huff->buildTree();
         huff->ReadFile(filename);
-        huff->encode("C:\\codefile\\codefile.txt");
+        huff->encode("C:\\codefile","codefile.txt");
+        huff->writeTree("C:\\codefile\\hfmtree.txt");
         }
         catch (string e) {
             return e;
@@ -64,8 +65,17 @@ class HuffmanCompressorPlugin : public flutter::Plugin {
         return  str;
     }
 
+    bool decode(){
+        huff->ReadFile("C:\\codefile\\codefile.txt");
+        return  huff->decodeWithMap();
+    }
+
     string getEncodedString(){
         return  huff->encodeResult;
+    }
+
+    string getDecodedString(){
+        return  huff->decodeResult;
     }
 
     void refresh(){
@@ -115,9 +125,18 @@ void HuffmanCompressorPlugin::HandleMethodCall(
       std::ostringstream os;
        os<<getCodeStr();
         result->Success(flutter::EncodableValue(os.str()));
-    }else {
-    result->NotImplemented();
-  }
+    }
+    if (method_call.method_name().compare("getDecodeResult") == 0) {
+        std::ostringstream os;
+        bool r = decode();
+        if (r){
+            os<<getDecodedString();
+            result->Success(flutter::EncodableValue(os.str()));
+        } else{
+            result->Error("");
+        }
+
+    }
 }
 
 }  // namespace

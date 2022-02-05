@@ -22,9 +22,9 @@ class HuffmanCompressor {
     return encodeMap;
   }
 
-  // static Future<String?> getDecodeMapString()  async {
-  //   final String? jsonString = await _channel.invokeMethod('getDecodeMapString');
-  //   return jsonString;
-  // }
+  static Future<String?> getDecodeResult()  async {
+    final String? result = await _channel.invokeMethod('getDecodeResult');
+    return result;
+  }
 
 }

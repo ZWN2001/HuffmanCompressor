@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <stack>
-#include <queue>
 #include <cmath>
+#include <windows.h>
 #include "huffman.h"
 
 
@@ -258,7 +258,6 @@ bool HuffmanTree::buildTree(){
     }
     removeNYT(nyt);
     setLevelAndN();
-    printMap();
     return false;
 }
 
@@ -306,7 +305,13 @@ void HuffmanTree::removeNYT(Node* nyt) {
 }
 
 //根据编码表对文件内容进行编码
-bool HuffmanTree::encode(const std::string& osstr){
+bool HuffmanTree::encode(const std::string& filepath,const std::string& filename){
+    int i = (INVALID_FILE_ATTRIBUTES != GetFileAttributesA(filepath.c_str()) && 0 != (GetFileAttributesA(filepath.c_str()) & FILE_ATTRIBUTE_DIRECTORY));
+    if (i == 0){
+        bool flag = CreateDirectoryA(filepath.c_str(),NULL);
+        // flag 为 true 说明创建成功
+        if (!flag)return false;
+    }
     //确认文件存在
     if (!is.is_open()) {
         cout << "error: no file read!" << endl;
@@ -314,9 +319,13 @@ bool HuffmanTree::encode(const std::string& osstr){
     }
     os.close();
     os.clear();
-    os.open(osstr, std::ios_base::out);
+    os.open(filepath +"\\"+ filename, std::ios_base::out);
     if (!os.is_open()) {
-        cout << "error: can not open file to write!" << endl;
+        ofstream { filepath +"\\"+ filename };
+        os.open(filepath + "\\"+filename, std::ios_base::out);
+    }
+    if (!os.is_open()) {
+        return false;
     }
 
     //读取字符，设置nyt节点为根节点
@@ -351,7 +360,6 @@ bool HuffmanTree::decodeWithMap() {
             decodeResult += codewordMap[codeword];
         }
     }
-//    cout<<"decodeResult"<<decodeResult<<endl;
     return true;
 }
 
@@ -367,9 +375,9 @@ void HuffmanTree::printMap(){
     Leaf* l;
     for (auto & leave : leaves) {
         l = leaves.at(leave.first);
-//        cout<<"codeword:"<<l->codeword<<endl;
-//        cout<<"level:"<<l->level<<endl;
-//        cout<<"n:"<<l->n<<endl;
+        cout<<"codeword:"<<l->codeword<<endl;
+        cout<<"level:"<<l->level<<endl;
+        cout<<"n:"<<l->n<<endl;
     }
 }
 
@@ -377,10 +385,14 @@ int HuffmanTree::getLocate(int level, int n) {
     return static_cast<int>(pow(2,level)) + n - 1;
 }
 
-bool HuffmanTree::writeTree(const std::string& filename) {
+bool HuffmanTree::writeTree(const std::string& filepath) {
     os.close();
     os.clear();
-    os.open(filename, std::ios_base::out);
+    os.open(filepath, std::ios_base::out);
+    if (!os.is_open()) {
+        ofstream { filepath  };
+        os.open(filepath , std::ios_base::out);
+    }
     if (!os.is_open()) {
         return false;
     }
