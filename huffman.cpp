@@ -1,7 +1,8 @@
 #include <iostream>
 #include <stack>
-#include <queue>
 #include <cmath>
+#include <windows.h>
+#include <vector>
 #include "huffman.h"
 
 
@@ -129,10 +130,9 @@ bool HuffmanTree::ReadFile(const std::string& filename){
 }
 
 //获取节点的哈夫曼编码
-std::string HuffmanTree::getHuffmanCode(Node *p_n){
+std::string HuffmanTree::getHuffmanCode(Node *p_n) const{
     std::string huffmanCode = "";
-    std::stack<Node *> stack;
-    std::stack<char> code;
+    std::stack<unsigned char> code;
 
     //逆向后推，当为左孩子的时候则置0，当为右孩子的时候则置1。
     while (p_n != tree->getRoot()) {
@@ -151,7 +151,7 @@ std::string HuffmanTree::getHuffmanCode(Node *p_n){
 }
 
 //找到所在块中最大节点编号的节点
-Node * HuffmanTree::findLarge(Node *p_node){
+Node * HuffmanTree::findLarge(Node *p_node) const{
     std::stack<Node *> stack;
     Node *p = tree->getRoot();//从根节点开始
     Node *large = p;
@@ -161,7 +161,7 @@ Node * HuffmanTree::findLarge(Node *p_node){
             if (p->weight == p_node->weight) {
                 //如果large不在同权重下，则置large为p
                 if (large->weight != p->weight)  large = p;
-                //同权重下的large比p大，也就是说p在large上方，则置large为p
+                    //同权重下的large比p大，也就是说p在large上方，则置large为p
                 else if(large->num > p->num)  large = p;
             }
             p = p->p_left;
@@ -211,19 +211,18 @@ bool HuffmanTree::buildTree(){
         return false;
     }
     //读取字符，设置nyt节点为根节点
-    char cbuffer;
+    unsigned char cbuffer;
     bool exist;
-    std::string code;
     Node *nyt = tree->getRoot();
     while (!is.eof()) { //末尾以-1表示输入的结束
-        cbuffer = is.get();
+        cbuffer = char(is.get());
         if (cbuffer != -1) {
             exist = false;
             auto it = leaves.find(cbuffer);
             if (it != leaves.end()) exist = true;
 
             if (exist) {
-                cout << cbuffer << " 在树中存在，编码为： " << leaves.at(cbuffer)->codeword << endl;
+//                cout << cbuffer << " 在树中存在，编码为： " << leaves.at(cbuffer)->codeword << endl;
                 Node *existNode = leaves.at(cbuffer)->p;
                 weightAdd(existNode);
             }
@@ -247,7 +246,7 @@ bool HuffmanTree::buildTree(){
                 newLeaf->p = nyt->p_right;
                 newLeaf->codeword = getHuffmanCode(nyt->p_right);
                 leaves.insert(pair<char, Leaf *>(cbuffer, newLeaf));
-                cout << cbuffer << "首次出现，设定编码为：" << newLeaf->codeword << endl;
+//                cout << cbuffer << "首次出现，设定编码为：" << newLeaf->codeword << endl;
                 //依次增加权重
                 Node *root = nyt->p_parent;
                 weightAdd(root);
@@ -260,7 +259,6 @@ bool HuffmanTree::buildTree(){
     }
     removeNYT(nyt);
     setLevelAndN();
-    printMap();
     return false;
 }
 
@@ -269,15 +267,15 @@ void HuffmanTree::setLevelAndN(){
     Leaf* l;
     string  str ;
 //    int i;
-    int n = 0,drop = 1;//认为初始落差是1，初始n为-1可以避免最后再减一
+    int n = 0,drop;
     for (auto & leave : leaves) {
         l = leaves.at(leave.first);
         str = l->codeword;
-        l->level = l->codeword.length();
+        l->level = int(l->codeword.length());
         drop = l->level;
         for (char i : str) {
             if (i == '1')
-                n += int(pow(2,drop-1));
+                n += int(pow(2, drop - 1));
             drop--;
         }
         l->n = n;
@@ -301,50 +299,71 @@ void HuffmanTree::removeNYT(Node* nyt) {
                 l->codeword = l->codeword.substr(0,l->codeword.length()-1);
                 l->p = brotherNode;
                 l->p->num = l->p->num - 1;
-                cout<<"removeNYT"<<l->codeword<<endl;
+//                cout<<"removeNYT"<<l->codeword<<endl;
             }
         }
     }
 }
 
+bool HuffmanTree::writeEncodeResultAsBinaryStream(const string& filepath,const string& filename){
+    os.close();
+    os.clear();
+    os.open(filepath +"\\"+ filename, std::ios_base::out| ios::binary);
+    if (!os.is_open()) {
+        ofstream { filepath +"\\"+ filename };
+        os.open(filepath + "\\"+filename, std::ios_base::out| ios::binary);
+    }
+    if (!os.is_open()) {
+        return false;
+    }
+
+    for (unsigned char c : encodeResult){
+        int s = int(c) - 48;
+        os<<s;
+    }
+    os.close();
+    os.clear();
+    return  true;
+}
+
 //根据编码表对文件内容进行编码
-bool HuffmanTree::encode(const std::string& osstr){
+bool HuffmanTree::encode(const std::string& filepath,const std::string& filename){
+    int i = (INVALID_FILE_ATTRIBUTES != GetFileAttributesA(filepath.c_str()) && 0 != (GetFileAttributesA(filepath.c_str()) & FILE_ATTRIBUTE_DIRECTORY));
+    if (i == 0){
+        bool flag = CreateDirectoryA(filepath.c_str(),nullptr);
+        // flag 为 true 说明创建成功
+        if (!flag)return false;
+    }
     //确认文件存在
     if (!is.is_open()) {
         cout << "error: no file read!" << endl;
         return false;
     }
-    os.close();
-    os.clear();
-    os.open(osstr, std::ios_base::out);
-    if (!os.is_open()) {
-        cout << "error: can not open file to write!" << endl;
-    }
 
     //读取字符，设置nyt节点为根节点
-    char cbuffer;
+    unsigned char cbuffer;
     while (!is.eof()) { //末尾以-1表示输入的结束
         cbuffer = char(is.get());
         if (cbuffer != -1) {
-            os<<leaves[cbuffer]->codeword;
+//            os<<leaves[cbuffer]->codeword;
             encodeResult.append(leaves[cbuffer]->codeword);
         }
     }
-    os.close();
-    return false;
+
+    return writeEncodeResultAsBinaryStream(filepath,filename);
 }
 
 bool HuffmanTree::decodeWithMap() {
     getCodewordMap();
-    char cbuffer,addChar;
+    unsigned char cbuffer,addChar;
     string codeword;
     while (!is.eof()) { //末尾以-1表示输入的结束
-        cbuffer = is.get();
+        cbuffer = char(is.get());
         if (cbuffer != -1) {
             codeword = "";
             codeword += cbuffer;
             while (codewordMap.find(codeword) == codewordMap.end()){
-                addChar = is.get();
+                addChar = char(is.get());
                 if (is.eof()&&addChar == -1){
                     return false;
                 }
@@ -353,7 +372,6 @@ bool HuffmanTree::decodeWithMap() {
             decodeResult += codewordMap[codeword];
         }
     }
-    cout<<"decodeResult"<<decodeResult<<endl;
     return true;
 }
 
@@ -379,12 +397,16 @@ int HuffmanTree::getLocate(int level, int n) {
     return static_cast<int>(pow(2,level)) + n - 1;
 }
 
-bool HuffmanTree::writeTree(const std::string& filename) {
+bool HuffmanTree::writeTree(const std::string& filepath) {
     os.close();
     os.clear();
-    os.open(filename, std::ios_base::out);
+    os.open(filepath, std::ios_base::out);
     if (!os.is_open()) {
-        return -1;
+        ofstream { filepath  };
+        os.open(filepath , std::ios_base::out);
+    }
+    if (!os.is_open()) {
+        return false;
     }
     Leaf* l;
     for (auto & leave : leaves) {
@@ -394,7 +416,7 @@ bool HuffmanTree::writeTree(const std::string& filename) {
     return true;
 }
 
-vector<string> split(const string& str,const string& delim) { //将分割后的子字符串存储在vector中
+std::vector<string> split(const string& str,const string& delim) { //将分割后的子字符串存储在vector中
     vector<string> res;
     if (str.empty()) return res;
 
@@ -407,7 +429,7 @@ vector<string> split(const string& str,const string& delim) { //将分割后的�
         if (pos < size) { //如果查找到，如果没有查找到分隔符，pos为string::npos
             string s = strs.substr(i, pos - i);//*****从i开始长度为pos-i的子字符串
             res.push_back(s);//两个连续空格之间切割出的字符串为空字符串，这里没有判断s是否为空，所以最后的结果中有空字符的输出，
-            i = pos + delim.size() - 1;
+            i = int(pos + delim.size() - 1);
         }
 
     }
@@ -440,7 +462,7 @@ bool HuffmanTree::readTree(const std::string &filename) {
     Node *parentNode;
     int locate;//用于唯一确定节点位置
     int level, n;//临时变量
-    bool isLeftChild,exist;
+    bool isLeftChild,exist = false;
 //    l->key<<":"<<l->codeword<<":"<<l->level<<":"<<l->n<<":"<<l->p->num<<":"<<l->p->weight
 //         0            1                  2          3               4                5
     while (getline(is, line)) {
@@ -492,7 +514,6 @@ bool HuffmanTree::readTree(const std::string &filename) {
                 newTree->addNode(root, nodeNow, BinaryTree::RightChild);
             }
         }
-
     }
     for (auto & leave : allRebuildLeafNodes) {
         leaf = allRebuildLeafNodes.at(leave.first);

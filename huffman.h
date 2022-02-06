@@ -23,7 +23,7 @@ public:
     enum Brother{LeftChild, RightChild};
     BinaryTree(int num = 0,int weight = 0);
     ~BinaryTree();
-    bool swap(Node* p_nodeA, Node* p_nodeB);
+    static bool swap(Node* p_nodeA, Node* p_nodeB);
     static bool addNode(Node* p_parent, Node* p_child, Brother brotherState);
     void deleteNode(Node *p_node);
     Node* getRoot() {return p_root;}
@@ -34,7 +34,7 @@ private:
 };
 
 struct Leaf{
-    char key;
+    unsigned char key;
     int level;
     int n;
     std::string codeword;
@@ -46,7 +46,7 @@ public:
     HuffmanTree();
     ~HuffmanTree();
     bool ReadFile(const std::string& str);
-    bool encode(const std::string& str);
+    bool encode(const std::string& str1,const std::string& str2);
     bool decodeWithMap();
     bool buildTree();
     void removeNYT(Node* nyt);
@@ -54,17 +54,18 @@ public:
     bool writeTree(const std::string& filename);
     bool readTree(const std::string& filename);
 
-    std::unordered_map<char,Leaf*> leaves;//所有现存的叶子
-    std::unordered_map<std::string,char> codewordMap;
+    std::unordered_map<unsigned char,Leaf*> leaves;//所有现存的叶子
+    std::unordered_map<std::string,unsigned char> codewordMap;
     std::string encodeResult;
     std::string decodeResult;
     BinaryTree* tree;
 private:
     void weightAdd(Node* p_node);
-    std::string getHuffmanCode(Node *p);
-    Node * findLarge(Node *);
+    std::string getHuffmanCode(Node *p) const;
+    Node * findLarge(Node *) const;
     void getCodewordMap();
     void setLevelAndN();
+    bool writeEncodeResultAsBinaryStream(const std::string& filepath, const std::string& filename);
     static int getLocate(int level, int n);
     static int sum;
     std::unordered_map<int,Node*> allRebuildNewNodes;
