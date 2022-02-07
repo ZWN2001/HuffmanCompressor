@@ -122,7 +122,6 @@ void HuffmanCompressorPlugin::HandleMethodCall(
   }
   if (method_call.method_name().compare("getEncodeMap") == 0) {
       std::ostringstream os;
-      cout<<getCodeStr();
        os<<getCodeStr();
         result->Success(flutter::EncodableValue(os.str()));
     }
