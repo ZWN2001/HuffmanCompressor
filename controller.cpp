@@ -48,23 +48,19 @@ huff = new HuffmanTree();
 
 
 int main(){
-    char c = '1';
-    int i = int(c) - 48;
-    cout<<i;
-    string str = "../tobetrans.txt";
+    string str = "C:\\codefile\\tobetrans.txt";
     buildTreeAndEncode(str);
 
-    str = "../tobetrans.txt";
+    str = "C:\\codefile\\tobetrans.txt";
     huff->ReadFile(str);
-    str = "D:\\myCppProject\\untitled\\codefile.txt";
-    huff->encode(str);
+    huff->encode("C:\\codefile","codefile.txt");
 
-    getCodeMapJsonStr();
+//    getCodeMapJsonStr();
 
 
-    decode("../codefile.txt");
+    decode("C:\\codefile\\codefile.txt");
     huff->writeTree("../hfmtree.txt");
     huff->readTree("../hfmtree.txt");
-    refresh();
+//    refresh();
     return 0;
 }

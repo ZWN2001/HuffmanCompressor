@@ -193,9 +193,11 @@ iostream
 -
 stack
 -
-queue
--
 cmath
+-
+windows.h
+-
+vector
 -
 huffman.h
 D:/myCppProject/untitled/huffman.h

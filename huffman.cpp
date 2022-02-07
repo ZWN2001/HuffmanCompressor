@@ -60,14 +60,12 @@ bool BinaryTree::addNode(Node * p_parent, Node * p_child, Brother brotherState){
         return false;
     if (brotherState == LeftChild) {
         if (p_parent->p_left != nullptr) {
-//            std::cout << "error:left child exist!" << std::endl;
             return false;
         }
         p_parent->p_left = p_child;
     }
     else if (brotherState == RightChild) {
         if (p_parent->p_right != nullptr) {
-//            std::cout << "error:right child exist!" << std::endl;
             return false;
         }
         p_parent->p_right = p_child;
@@ -214,9 +212,10 @@ bool HuffmanTree::buildTree(){
     unsigned char cbuffer;
     bool exist;
     Node *nyt = tree->getRoot();
-    while (!is.eof()) { //末尾以-1表示输入的结束
-        cbuffer = char(is.get());
-        if (cbuffer != -1) {
+    while (!is.eof()) { //末尾以255表示输入的结束
+        cbuffer = is.get();
+        cout<<cbuffer<<endl;
+        if (cbuffer != 255) {
             exist = false;
             auto it = leaves.find(cbuffer);
             if (it != leaves.end()) exist = true;
@@ -308,18 +307,35 @@ void HuffmanTree::removeNYT(Node* nyt) {
 bool HuffmanTree::writeEncodeResultAsBinaryStream(const string& filepath,const string& filename){
     os.close();
     os.clear();
-    os.open(filepath +"\\"+ filename, std::ios_base::out| ios::binary);
+    os.open(filepath +"\\"+ filename, std::ios_base::out);
     if (!os.is_open()) {
         ofstream { filepath +"\\"+ filename };
-        os.open(filepath + "\\"+filename, std::ios_base::out| ios::binary);
+        os.open(filepath + "\\"+filename, std::ios_base::out);
     }
     if (!os.is_open()) {
         return false;
     }
 
-    for (unsigned char c : encodeResult){
-        int s = int(c) - 48;
-        os<<s;
+    int count = 0;
+    char c = char(0);
+    for (unsigned char ch : encodeResult){
+        c <<= 1;
+        if (ch == '1')
+            c |= 1;
+        else
+            c |= 0;
+        ++count;
+        if (count == 8)
+        {
+            os<<c;
+            c = char(0);
+            count = 0;
+        }
+    }
+    if (count != 0)
+    {
+        c <<= (8 - count);
+        os<<c;
     }
     os.close();
     os.clear();
@@ -342,9 +358,9 @@ bool HuffmanTree::encode(const std::string& filepath,const std::string& filename
 
     //读取字符，设置nyt节点为根节点
     unsigned char cbuffer;
-    while (!is.eof()) { //末尾以-1表示输入的结束
-        cbuffer = char(is.get());
-        if (cbuffer != -1) {
+    while (!is.eof()) { //末尾以255表示输入的结束
+        cbuffer = is.get();
+        if (cbuffer != 255) {
 //            os<<leaves[cbuffer]->codeword;
             encodeResult.append(leaves[cbuffer]->codeword);
         }
@@ -355,23 +371,37 @@ bool HuffmanTree::encode(const std::string& filepath,const std::string& filename
 
 bool HuffmanTree::decodeWithMap() {
     getCodewordMap();
-    unsigned char cbuffer,addChar;
+    unsigned char cbuffer;
     string codeword;
-    while (!is.eof()) { //末尾以-1表示输入的结束
-        cbuffer = char(is.get());
-        if (cbuffer != -1) {
-            codeword = "";
-            codeword += cbuffer;
-            while (codewordMap.find(codeword) == codewordMap.end()){
-                addChar = char(is.get());
-                if (is.eof()&&addChar == -1){
-                    return false;
+    while (!is.eof()) { //末尾以255表示输入的结束
+        cbuffer = is.get();
+        if (cbuffer != 255) {
+            for (int pos = 7; pos >= 0; --pos){
+                if (cbuffer & (1 << pos)) //1
+                   codeword.append("1");
+                else                    //0
+                    codeword.append("0");
+                if (codewordMap.find(codeword) != codewordMap.end()){
+                    decodeResult += codewordMap[codeword];
+                    codeword = "";
                 }
-                codeword += addChar;
             }
-            decodeResult += codewordMap[codeword];
         }
     }
+
+    os.close();
+    os.clear();
+    os.open("C:\\codefile\\textfile.txt", std::ios_base::out);
+    if (!os.is_open()) {
+        ofstream { "C:\\codefile\\textfile.txt" };
+        os.open("C:\\codefile\\textfile.txt", std::ios_base::out);
+    }
+    if (!os.is_open()) {
+        return false;
+    }
+    os<<decodeResult;
+    os.close();
+    os.clear();
     return true;
 }
 
