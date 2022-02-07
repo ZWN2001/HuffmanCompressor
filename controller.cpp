@@ -15,26 +15,6 @@ string decode(const string& filename){
     return huff->decodeResult;
 }
 
-string getCodeMapJsonStr(){
-    std::string jsonStr;
-    Json::Value map;
-    Json::StreamWriterBuilder writerBuilder;
-    std::ostringstream os;
-    Leaf* l;
-    string str;
-    int i = 0;
-    for (auto & leave : huff->leaves) {
-        l = huff->leaves.at(leave.first);
-        string s(1,l->key);
-        str = s+":"+l->codeword;
-        map[i] = str;
-        i++;
-    }
-    std::unique_ptr<Json::StreamWriter> jsonWriter(writerBuilder.newStreamWriter());
-    jsonWriter->write(map, &os);
-    jsonStr = os.str();
-    return  jsonStr;
-}
 
 //string getEncodedString(){
 //    return  huff->encodeResult;
@@ -59,8 +39,70 @@ int main(){
 
 
     decode("C:\\codefile\\codefile.txt");
-    huff->writeTree("../hfmtree.txt");
-    huff->readTree("../hfmtree.txt");
+    huff->writeTree("C:\\codefile\\hfmtree.txt");
+    huff->readTree("C:\\codefile\\hfmtree.txt");
 //    refresh();
     return 0;
 }
+
+
+//#include <Windows.h>
+//#include <iostream>
+//#include <fstream>
+//#include <cstdio>
+//#include <string>
+//#include <vector>
+//
+//using namespace std;
+//
+//std::vector<string> getEachString(const string& str) { //将分割后的子字符串存储在vector中
+//    vector<string> res;
+//    if (str.empty()) return res;
+//    string eachString = "";
+//    size_t size = str.size();
+//
+//    for (int i = 0; i < size; ++i) {
+//        cout<<str.substr(i,1);
+//        res.push_back(str.substr(i,1));
+//    }
+//    return res;
+//}
+//int main()
+//{
+//    string str = "";
+//    wchar_t wch = '中';
+//    char ch = 'b';
+//    cout<<"char : "<<ch<<wch<<endl;
+//
+//    char filename[MAX_PATH];
+//    GetModuleFileName(NULL,filename, MAX_PATH);
+//    str = (string)filename;
+//    int pos = str.find_last_of('\\',str.length());
+//    str = str.substr(0,pos);
+//    char * ch2 = const_cast<char *>(str.c_str());
+//    cout<<"file path: "<< ch2<<endl;
+//
+//    str += "\\read.txt";
+//
+//    ifstream ifs;
+//    ifs.open(str);
+//    if (!ifs.is_open())
+//    {
+//        cout<<"open file "<<str<<"	failed"<<endl;
+//    }
+//    else
+//    {
+//        string con = "";
+//        int count = 0;
+////        getline(ifs,con);
+//
+//        do{
+//            getline(ifs,con);
+//            ++count;
+//            cout<<count<<":	"<<con<<endl;
+//            getEachString(con);
+//
+//        }while (ifs);
+//    }
+//    return 0;
+//}

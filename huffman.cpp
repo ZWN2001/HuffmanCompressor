@@ -202,6 +202,18 @@ void HuffmanTree::weightAdd(Node * p_node){
     }
 }
 
+std::vector<string> getEachString(const string& str) { //将分割后的子字符串存储在vector中
+    vector<string> res;
+    if (str.empty()) return res;
+    string eachString = "";
+    size_t size = str.size();
+
+    for (int i = 0; i < size; ++i) {
+        res.push_back(str.substr(i,1));
+    }
+    return res;
+}
+
 //动态构建霍夫曼树
 bool HuffmanTree::buildTree(){
     if (!is.is_open()) {
@@ -209,55 +221,61 @@ bool HuffmanTree::buildTree(){
         return false;
     }
     //读取字符，设置nyt节点为根节点
-    unsigned char cbuffer;
+    string cbuffer;
     bool exist;
+    vector<string> stringRes;
     Node *nyt = tree->getRoot();
-    while (!is.eof()) { //末尾以255表示输入的结束
-        cbuffer = is.get();
-        cout<<cbuffer<<endl;
-        if (cbuffer != 255) {
-            exist = false;
-            auto it = leaves.find(cbuffer);
-            if (it != leaves.end()) exist = true;
+    getline(is,cbuffer);
+    while (is)
+    {
+        stringRes = getEachString(cbuffer);
+        for (const string& eachString : stringRes){
+            if (!eachString.empty()) {
+                exist = false;
+                auto it = leaves.find(eachString);
+                if (it != leaves.end()) exist = true;
 
-            if (exist) {
+                if (exist) {
 //                cout << cbuffer << " 在树中存在，编码为： " << leaves.at(cbuffer)->codeword << endl;
-                Node *existNode = leaves.at(cbuffer)->p;
-                weightAdd(existNode);
-            }
-            else {
-                //当字符不存在树中时，则新建子树，并替代原nyt节点
-                Node *c = new Node(nullptr, nullptr, nyt);
-                c->num = sum++;
-                c->weight = 1;
+                    Node *existNode = leaves.at(eachString)->p;
+                    weightAdd(existNode);
+                }
+                else {
+                    //当字符不存在树中时，则新建子树，并替代原nyt节点
+                    Node *c = new Node(nullptr, nullptr, nyt);
+                    c->num = sum++;
+                    c->weight = 1;
 
-                Node *NYT = new Node(nullptr, nullptr, nyt);
-                NYT->num = sum++;
-                NYT->weight = 0;
+                    Node *NYT = new Node(nullptr, nullptr, nyt);
+                    NYT->num = sum++;
+                    NYT->weight = 0;
 
-                tree->addNode(nyt, NYT, BinaryTree::LeftChild);
-                tree->addNode(nyt, c, BinaryTree::RightChild);
-                nyt->weight = 1;
+                    tree->addNode(nyt, NYT, BinaryTree::LeftChild);
+                    tree->addNode(nyt, c, BinaryTree::RightChild);
+                    nyt->weight = 1;
 
-                //将新的字符放进leaves中
-                Leaf *newLeaf = new Leaf();
-                newLeaf->key = cbuffer;
-                newLeaf->p = nyt->p_right;
-                newLeaf->codeword = getHuffmanCode(nyt->p_right);
-                leaves.insert(pair<char, Leaf *>(cbuffer, newLeaf));
+                    //将新的字符放进leaves中
+                    Leaf *newLeaf = new Leaf();
+                    newLeaf->key = eachString;
+                    newLeaf->p = nyt->p_right;
+                    newLeaf->codeword = getHuffmanCode(nyt->p_right);
+                    leaves.insert(pair<string, Leaf *>(eachString, newLeaf));
 //                cout << cbuffer << "首次出现，设定编码为：" << newLeaf->codeword << endl;
-                //依次增加权重
-                Node *root = nyt->p_parent;
-                weightAdd(root);
+                    //依次增加权重
+                    Node *root = nyt->p_parent;
+                    weightAdd(root);
 
-                //设置新的nyt节点为原nyt节点的左孩子
-                nyt = nyt->p_left;
+                    //设置新的nyt节点为原nyt节点的左孩子
+                    nyt = nyt->p_left;
+                }
+
             }
-
         }
+        getline(is,cbuffer);
     }
     removeNYT(nyt);
     setLevelAndN();
+    printMap();
     return false;
 }
 
@@ -357,15 +375,18 @@ bool HuffmanTree::encode(const std::string& filepath,const std::string& filename
     }
 
     //读取字符，设置nyt节点为根节点
-    unsigned char cbuffer;
-    while (!is.eof()) { //末尾以255表示输入的结束
-        cbuffer = is.get();
-        if (cbuffer != 255) {
-//            os<<leaves[cbuffer]->codeword;
-            encodeResult.append(leaves[cbuffer]->codeword);
+    string cbuffer;
+    vector<string> stringRes;
+    getline(is,cbuffer);
+    while (is){
+        stringRes = getEachString(cbuffer);
+        for(const string& eachString : stringRes){
+            if (!eachString.empty()) {
+                encodeResult.append(leaves[eachString]->codeword);
+            }
         }
+        getline(is,cbuffer);
     }
-
     return writeEncodeResultAsBinaryStream(filepath,filename);
 }
 
@@ -417,6 +438,7 @@ void HuffmanTree::printMap(){
     Leaf* l;
     for (auto & leave : leaves) {
         l = leaves.at(leave.first);
+        cout<<"key"<<l->key<<endl;
         cout<<"codeword:"<<l->codeword<<endl;
         cout<<"level:"<<l->level<<endl;
         cout<<"n:"<<l->n<<endl;
@@ -438,6 +460,7 @@ bool HuffmanTree::writeTree(const std::string& filepath) {
     if (!os.is_open()) {
         return false;
     }
+
     Leaf* l;
     for (auto & leave : leaves) {
         l = leaves.at(leave.first);

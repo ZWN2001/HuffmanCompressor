@@ -34,7 +34,7 @@ private:
 };
 
 struct Leaf{
-    unsigned char key;
+    std::string key;
     int level;
     int n;
     std::string codeword;
@@ -54,8 +54,8 @@ public:
     bool writeTree(const std::string& filename);
     bool readTree(const std::string& filename);
 
-    std::unordered_map<unsigned char,Leaf*> leaves;//所有现存的叶子
-    std::unordered_map<std::string,unsigned char> codewordMap;
+    std::unordered_map<std::string,Leaf*> leaves;//所有现存的叶子
+    std::unordered_map<std::string,std::string> codewordMap;
     std::string encodeResult;
     std::string decodeResult;
     BinaryTree* tree;
