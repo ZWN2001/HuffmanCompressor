@@ -58,9 +58,8 @@ class HuffmanCompressorPlugin : public flutter::Plugin {
         Leaf* l;
         for (auto & leave : huff->leaves) {
             l = huff->leaves.at(leave.first);
-            string s(1,l->key);
-            str.append(s+":"+l->codeword);
-            str.append(",");
+            str.append(l->key+":"+l->codeword);
+            str.append("<br>");
         }
         return  str;
     }
@@ -123,6 +122,7 @@ void HuffmanCompressorPlugin::HandleMethodCall(
   }
   if (method_call.method_name().compare("getEncodeMap") == 0) {
       std::ostringstream os;
+      cout<<getCodeStr();
        os<<getCodeStr();
         result->Success(flutter::EncodableValue(os.str()));
     }

@@ -229,7 +229,7 @@ class InitLogic extends GetxController {
           encodeResult = value;
           await HuffmanCompressor.getEncodeMap().then((value){
             if(value != null){
-              encodeMap = value.split(",");
+              encodeMap = value.split("<br>");
               encodeMap.removeLast();
             }
             return true;
