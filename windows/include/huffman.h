@@ -65,6 +65,7 @@ private:
     Node * findLarge(Node *);
     void getCodewordMap();
     void setLevelAndN();
+    bool writeEncodeResultAsBinaryStream(std::string filepath, std::string filename);
     static int getLocate(int level, int n);
     static int sum;
     std::unordered_map<int,Node*> allRebuildNewNodes;

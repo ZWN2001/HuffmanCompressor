@@ -19,6 +19,7 @@ class HuffmanCompressor {
 
   static Future<String?> getEncodeMap()  async {
     final String? encodeMap = await _channel.invokeMethod('getEncodeMap');
+    // print(encodeMap);
     return encodeMap;
   }
 

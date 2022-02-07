@@ -304,6 +304,27 @@ void HuffmanTree::removeNYT(Node* nyt) {
     }
 }
 
+bool HuffmanTree::writeEncodeResultAsBinaryStream(string filepath,string filename){
+    os.close();
+    os.clear();
+    os.open(filepath +"\\"+ filename, std::ios_base::out| ios::binary);
+    if (!os.is_open()) {
+        ofstream { filepath +"\\"+ filename };
+        os.open(filepath + "\\"+filename, std::ios_base::out| ios::binary);
+    }
+    if (!os.is_open()) {
+        return false;
+    }
+
+    for (char c : encodeResult){
+        int s = int(c) - 48;
+        os<<s;
+    }
+    os.close();
+    os.clear();
+    return  true;
+}
+
 //根据编码表对文件内容进行编码
 bool HuffmanTree::encode(const std::string& filepath,const std::string& filename){
     int i = (INVALID_FILE_ATTRIBUTES != GetFileAttributesA(filepath.c_str()) && 0 != (GetFileAttributesA(filepath.c_str()) & FILE_ATTRIBUTE_DIRECTORY));
@@ -317,28 +338,18 @@ bool HuffmanTree::encode(const std::string& filepath,const std::string& filename
         cout << "error: no file read!" << endl;
         return false;
     }
-    os.close();
-    os.clear();
-    os.open(filepath +"\\"+ filename, std::ios_base::out);
-    if (!os.is_open()) {
-        ofstream { filepath +"\\"+ filename };
-        os.open(filepath + "\\"+filename, std::ios_base::out);
-    }
-    if (!os.is_open()) {
-        return false;
-    }
 
     //读取字符，设置nyt节点为根节点
     char cbuffer;
     while (!is.eof()) { //末尾以-1表示输入的结束
         cbuffer = char(is.get());
         if (cbuffer != -1) {
-            os<<leaves[cbuffer]->codeword;
+//            os<<leaves[cbuffer]->codeword;
             encodeResult.append(leaves[cbuffer]->codeword);
         }
     }
-    os.close();
-    return false;
+
+    return writeEncodeResultAsBinaryStream(filepath,filename);
 }
 
 bool HuffmanTree::decodeWithMap() {

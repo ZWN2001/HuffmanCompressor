@@ -108,7 +108,7 @@ class HfmtreeUtil {
   }
 
   ///child(start)->parent(end)
-  static Map<Offset,Offset> getLineOffsets(Map<int, TreeNode> allNodes, List<TreeNode> leaves,int height) {
+  static Map<Offset,Offset> getLineOffsets(Map<int, TreeNode> allNodes, List<TreeNode> leaves,int height,double scale) {
     Map<Offset,Offset> lines = {};
     Offset start, end;
     double x,y;
@@ -119,14 +119,16 @@ class HfmtreeUtil {
         parent = allNodes[child.parent]!;
         ///x,y都要加半个节点大小进行校正，否则会定位到节点左上角
         ///并且要在x上加4以修正偏移
-        x = Constant.WIDGET_WIDEH/2 + HfmtreeUtil.getNodeHorizontalOffset(child.level, child.n, height)
-            + Constant.NODE_SIZE/2  + 4.0;
+        x = Constant.WIDGET_WIDEH/2 + (HfmtreeUtil.getNodeHorizontalOffset(child.level, child.n, height)
+            + Constant.NODE_SIZE/2  + 4.0) * scale;
         y = getNodeVerticalOffset(child.level) + Constant.NODE_SIZE/2  + 0.0;
+        y = y * scale;
         start = Offset(x, y);
         if(lines[start] == null){
-          x = Constant.WIDGET_WIDEH/2 + HfmtreeUtil.getNodeHorizontalOffset(parent.level, parent.n, height)
-              + Constant.NODE_SIZE/2 + 4.0;
+          x = Constant.WIDGET_WIDEH/2 + (HfmtreeUtil.getNodeHorizontalOffset(parent.level, parent.n, height)
+              + Constant.NODE_SIZE/2 + 4.0) * scale;
           y = getNodeVerticalOffset(parent.level) + Constant.NODE_SIZE/2 + 0.0;
+          y = y * scale;
           end = Offset(x, y);
           lines[start] = end;//一个节点可能有多个子节点，但一个子节点只会有一个父节点
           child = parent;
