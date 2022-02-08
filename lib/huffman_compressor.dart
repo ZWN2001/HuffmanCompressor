@@ -16,6 +16,10 @@ class HuffmanCompressor {
         {'filename':filename});
     return encodeString;
   }
+  static Future<String?> getEncodeResultWithoutFilename()  async {
+    final String? encodeString = await _channel.invokeMethod('getEncodeResultWithoutFilename');
+    return encodeString;
+  }
 
   static Future<String?> getEncodeMap()  async {
     final String? encodeMap = await _channel.invokeMethod('getEncodeMap');

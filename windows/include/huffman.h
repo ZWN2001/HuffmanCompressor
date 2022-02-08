@@ -74,10 +74,3 @@ private:
     ifstream is;
     ofstream os;
 };
-
-//class Controller{
-//public:
-//    Controller();
-//    HuffmanTree huff;
-//
-//};
