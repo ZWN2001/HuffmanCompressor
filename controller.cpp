@@ -26,40 +26,19 @@ huff = new HuffmanTree();
 }
 
 int main(){
-
-//    string s = "1234你我他abcde，。,.";
-//getEachString(s);
-//    Leaf* l = new Leaf();
-//    string str = "啊";
-//    l->key = str;
-//
-//    unordered_map<string,Leaf*> s;
-//    s["啊"] = l;
-//    s["啊请求"] = l;
-//    s["啊去"] = l;
-//    for (auto & leave : s) {
-//        l = s.at(leave.first);
-//        cout<<l->key;
-//    }
-//    auto it = s.find("啊");
-//    if (it != s.end()){
-//        cout<<"有";
-//    }
-
-
     string str = "C:\\codefile\\tobetrans.txt";
     buildTreeAndEncode(str);
-//
-//    str = "C:\\codefile\\tobetrans.txt";
-//    huff->ReadFile(str);
-//    huff->encode("C:\\codefile","codefile.txt");
-//
-////    getCodeMapJsonStr();
-//
-//
-//    decode("C:\\codefile\\codefile.txt");
-//    huff->writeTree("C:\\codefile\\hfmtree.txt");
-//    huff->readTree("C:\\codefile\\hfmtree.txt");
+
+    str = "C:\\codefile\\tobetrans.txt";
+    huff->ReadFile(str);
+    huff->encode("C:\\codefile","codefile.txt");
+
+//    getCodeMapJsonStr();
+
+
+    decode("C:\\codefile\\codefile.txt");
+    huff->writeTree("C:\\codefile\\hfmtree.txt");
+    huff->readTree("C:\\codefile\\hfmtree.txt");
 //    refresh();
     return 0;
 }
