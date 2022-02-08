@@ -261,7 +261,7 @@ bool HuffmanTree::buildTree(){
         }
         getline(is,cbuffer);
     }
-//    removeNYT(nyt);
+    removeNYT(nyt);
     setLevelAndN();
     return false;
 }
