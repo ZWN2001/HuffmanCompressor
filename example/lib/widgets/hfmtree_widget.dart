@@ -72,8 +72,8 @@ class HfmtreeWidgetLogic extends GetxController {
 
   void init() {
     height = HfmtreeUtil.getHeight(leaves);
-    if (height > 5) {
-      scale = 1 / pow(2, height - 4);
+    if (height > 4) {
+      scale = 1 / pow(2, height - 5);
     }
     lines = HfmtreeUtil.getLineOffsets(allNodes, leaves, height, scale);
     getNodeWidget(allNodes, height);

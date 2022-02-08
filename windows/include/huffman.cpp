@@ -220,8 +220,8 @@ bool HuffmanTree::buildTree(){
     vector<string> stringRes;
     Node *nyt = tree->getRoot();
     getline(is,cbuffer);
-    stringRes = getEachString(cbuffer);
     while (is){
+        stringRes = getEachString(cbuffer);
         for (const string& stringEach : stringRes){
             exist = false;
             auto it = leaves.find(stringEach);
@@ -270,7 +270,6 @@ bool HuffmanTree::buildTree(){
 void HuffmanTree::setLevelAndN(){
     Leaf* l;
     string  str ;
-//    int i;
     int n = 0,drop;
     for (auto & leave : leaves) {
         l = leaves.at(leave.first);
@@ -336,13 +335,12 @@ bool HuffmanTree::writeEncodeResultAsBinaryStream(const string& filepath,const s
             count = 0;
         }
     }
-    if (count != 0)
-    {
+    if (count != 0){//用0补位
         c <<= (8 - count);
         os<<c;
     }
     os.close();
-    os.clear();
+//    os.clear();
     return  true;
 }
 
@@ -363,34 +361,50 @@ bool HuffmanTree::encode(const std::string& filepath,const std::string& filename
     getline(is,cbuffer);
     while (is){
         stringRes = getEachString(cbuffer);
-        for(const string& stringEach : stringRes){
+        for(const string & stringEach : stringRes){
             encodeResult.append(leaves[stringEach]->codeword);
         }
         getline(is,cbuffer);
     }
+    os.close();
+    os.clear();
+    os.open("C:\\codefile\\encodeResult.txt", std::ios_base::out);
+    os<<encodeResult;
+    os.close();
     return writeEncodeResultAsBinaryStream(filepath,filename);
 }
 
 bool HuffmanTree::decodeWithMap() {
     getCodewordMap();
-    unsigned char cbuffer;
+    char cbuffer;
     string codeword;
-    while (!is.eof()) {
-        cbuffer = unsigned char(is.get());
-        if (cbuffer != unsigned char(255)) {//末尾以255表示输入的结束
-            for (int pos = 7; pos >= 0; --pos){
-                if (cbuffer & (1 << pos)) //1
-                    codeword.append("1");
-                else                    //0
-                    codeword.append("0");
-                if (codewordMap.find(codeword) != codewordMap.end()){
-                    decodeResult += codewordMap[codeword];
-                    codeword = "";
-                }
+    while (!is.eof()) { //末尾以255表示输入的结束
+        cbuffer = char(is.get());
+        if (cbuffer != -1) {
+//            for (int pos = 7; pos >= 0; --pos){
+//                if (cbuffer & (1 << pos)) {//1
+//                    codeword.append("1");
+//                    cout<<"1";
+//                }else{   //0
+//                    codeword.append("0");
+//                    cout<<"0";
+//                }
+//                if (codewordMap.find(codeword) != codewordMap.end()){
+//                    decodeResult += codewordMap[codeword];
+//                    codeword = "";
+//                }
+//            }
+            if (cbuffer == '1'){
+                codeword.append("1");
+            } else{
+                codeword.append("0");
+            }
+            if (codewordMap.find(codeword) != codewordMap.end()){
+                decodeResult += codewordMap[codeword];
+                codeword = "";
             }
         }
     }
-
     os.close();
     os.clear();
     os.open("C:\\codefile\\textfile.txt", std::ios_base::out);
@@ -448,6 +462,7 @@ bool HuffmanTree::writeTree(const std::string& filepath) {
         l = leaves.at(leave.first);
         os<<l->key<<":"<<l->codeword<<":"<<l->level<<":"<<l->n<<":"<<l->p->num<<":"<<l->p->weight<<endl;
     }
+    os.close();
     return true;
 }
 
