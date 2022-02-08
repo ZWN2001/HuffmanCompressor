@@ -140,10 +140,13 @@ class DecodeLogic extends GetxController {
   @override
   void onInit()  {
     super.onInit();
-    File file = File("C:\\codefile\\codefile.txt");
-     file.readAsString().then((value){
-      decodeString.value = value;
-    });
+   HuffmanCompressor.getEncodeResultWithoutFilename().then((value){
+     if(value != null){
+       decodeString.value = value;
+     }else{
+      showToast('编码结果读取错误',position: ToastPosition.bottom);
+     }
+   });
   }
 
   Future<bool> decode() async {
