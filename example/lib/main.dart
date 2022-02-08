@@ -6,7 +6,7 @@ import 'package:huffman_compressor_example/ui/main_screen.dart';
 import 'package:oktoast/oktoast.dart';
 
 void main() {
-  runApp( const MyApp());
+  runApp(const MyApp());
   doWhenWindowReady(() {
     appWindow.title = "霍夫曼编解码";
     const initialSize = Size(1200, 700);
@@ -29,9 +29,3 @@ class MyApp extends StatelessWidget {
     ));
   }
 }
-
-
-
-
-
-

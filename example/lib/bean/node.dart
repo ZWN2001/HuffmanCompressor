@@ -1,5 +1,4 @@
 class TreeNode {
-
   late String key;
   late String codeword;
   late int level;
@@ -11,8 +10,16 @@ class TreeNode {
   int parent = -1;
   int x = 0;
   int y = 0;
-  TreeNode({this.key = '', this.codeword = '', required this.level, required this.n,
-    required this.num, required this.weight,this.x = 0,this.y = 0});
+
+  TreeNode(
+      {this.key = '',
+      this.codeword = '',
+      required this.level,
+      required this.n,
+      required this.num,
+      required this.weight,
+      this.x = 0,
+      this.y = 0});
 
   @override
   String toString() {

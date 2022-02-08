@@ -8,12 +8,10 @@ import '../constant.dart';
 class HfmtreeUtil {
   static Map<int, TreeNode> buildTreeWithLeaves(List<TreeNode> leaves) {
     int i = 0;
-    int locateChild = 0,
-        locateParent = 0;
+    int locateChild = 0, locateParent = 0;
     TreeNode newNode;
     int level, n;
-    bool isLeftChild = true,
-        exist = true;
+    bool isLeftChild = true, exist = true;
     Map<int, TreeNode> allNodes = {};
 
     for (TreeNode leaf in leaves) {
@@ -33,7 +31,8 @@ class HfmtreeUtil {
         } else {
           exist = true;
         }
-        if (isLeftChild) { //左子树
+        if (isLeftChild) {
+          //左子树
           allNodes = _addNode(
               allNodes, locateParent, locateChild, ChildState.leftChild);
         } else {
@@ -59,8 +58,8 @@ class HfmtreeUtil {
     return allNodes;
   }
 
-  static Map<int, TreeNode> _sumWeight(Map<int, TreeNode> allNodes,
-      List<TreeNode> leaves) {
+  static Map<int, TreeNode> _sumWeight(
+      Map<int, TreeNode> allNodes, List<TreeNode> leaves) {
     int level, n, locate;
     for (TreeNode value in leaves) {
       level = value.level;
@@ -93,8 +92,8 @@ class HfmtreeUtil {
   ///获取节点竖直偏移量
   static int getNodeVerticalOffset(int level) {
     return Constant.MARGIN_DEFAULT_TOP +
-        (level + 1) * Constant.MARGIN_EACH_LEVEL
-        + level * Constant.NODE_SIZE;
+        (level + 1) * Constant.MARGIN_EACH_LEVEL +
+        level * Constant.NODE_SIZE;
   }
 
   ///获取节点在层内的水平偏移量
@@ -102,41 +101,52 @@ class HfmtreeUtil {
   ///这个heiget是调用getHeiget获得的
   static double getNodeHorizontalOffset(int level, int n, int height) {
     int drop = height - level - 1;
-    double ratio = n -  (pow(2, level) - 1) / 2 ;
-    double eachMargin = Constant.MARGIN_EACH_NODE_HORIZONTIAL * pow(2, drop) + 0.0;
+    double ratio = n - (pow(2, level) - 1) / 2;
+    double eachMargin =
+        Constant.MARGIN_EACH_NODE_HORIZONTIAL * pow(2, drop) + 0.0;
     return ratio * eachMargin;
   }
 
   ///child(start)->parent(end)
-  static Map<Offset,Offset> getLineOffsets(Map<int, TreeNode> allNodes, List<TreeNode> leaves,int height,double scale) {
-    Map<Offset,Offset> lines = {};
+  static Map<Offset, Offset> getLineOffsets(Map<int, TreeNode> allNodes,
+      List<TreeNode> leaves, int height, double scale) {
+    Map<Offset, Offset> lines = {};
     Offset start, end;
-    double x,y;
+    double x, y;
     TreeNode child, parent;
     for (TreeNode leaf in leaves) {
       child = leaf;
-      while(child.parent != -1){
+      while (child.parent != -1) {
         parent = allNodes[child.parent]!;
+
         ///x,y都要加半个节点大小进行校正，否则会定位到节点左上角
         ///并且要在x上加4以修正偏移
-        x = Constant.WIDGET_WIDEH/2 + (HfmtreeUtil.getNodeHorizontalOffset(child.level, child.n, height)
-            + Constant.NODE_SIZE/2  + 4.0) * scale;
-        y = getNodeVerticalOffset(child.level) + Constant.NODE_SIZE/2  + 0.0;
+        x = Constant.WIDGET_WIDEH / 2 +
+            (HfmtreeUtil.getNodeHorizontalOffset(child.level, child.n, height) +
+                    Constant.NODE_SIZE / 2 +
+                    4.0) *
+                scale;
+        y = getNodeVerticalOffset(child.level) + Constant.NODE_SIZE / 2 + 0.0;
         y = y * scale;
         start = Offset(x, y);
-        if(lines[start] == null){
-          x = Constant.WIDGET_WIDEH/2 + (HfmtreeUtil.getNodeHorizontalOffset(parent.level, parent.n, height)
-              + Constant.NODE_SIZE/2 + 4.0) * scale;
-          y = getNodeVerticalOffset(parent.level) + Constant.NODE_SIZE/2 + 0.0;
+        if (lines[start] == null) {
+          x = Constant.WIDGET_WIDEH / 2 +
+              (HfmtreeUtil.getNodeHorizontalOffset(
+                          parent.level, parent.n, height) +
+                      Constant.NODE_SIZE / 2 +
+                      4.0) *
+                  scale;
+          y = getNodeVerticalOffset(parent.level) +
+              Constant.NODE_SIZE / 2 +
+              0.0;
           y = y * scale;
           end = Offset(x, y);
-          lines[start] = end;//一个节点可能有多个子节点，但一个子节点只会有一个父节点
+          lines[start] = end; //一个节点可能有多个子节点，但一个子节点只会有一个父节点
           child = parent;
-        }else{
+        } else {
           break;
         }
       }
-
     }
     return lines;
   }

@@ -10,20 +10,22 @@ import 'node_widget.dart';
 
 class HfmtreeWidget extends StatefulWidget {
   final List<TreeNode> leaves;
-  final Map<int,TreeNode> allNodes;
-  const HfmtreeWidget({Key? key,required this.leaves,required this.allNodes}) : super(key: key);
+  final Map<int, TreeNode> allNodes;
+
+  const HfmtreeWidget({Key? key, required this.leaves, required this.allNodes})
+      : super(key: key);
 
   @override
-  State<StatefulWidget> createState()=>HfmtreeWidgetView();
+  State<StatefulWidget> createState() => HfmtreeWidgetView();
 }
 
-class HfmtreeWidgetView extends State<HfmtreeWidget>{
+class HfmtreeWidgetView extends State<HfmtreeWidget> {
   final hfmtreeWidgetLogic = Get.put(HfmtreeWidgetLogic());
-  final TransformationController _transformationController = TransformationController();
+
   @override
   void initState() {
     super.initState();
-    if(hfmtreeWidgetLogic.leaves.isEmpty){
+    if (hfmtreeWidgetLogic.leaves.isEmpty) {
       hfmtreeWidgetLogic.leaves = widget.leaves;
       hfmtreeWidgetLogic.allNodes = widget.allNodes;
       hfmtreeWidgetLogic.init();
@@ -33,11 +35,10 @@ class HfmtreeWidgetView extends State<HfmtreeWidget>{
   @override
   Widget build(BuildContext context) {
     return InteractiveViewer(
-      maxScale: 4/hfmtreeWidgetLogic.scale,
-      transformationController: _transformationController,
+      maxScale: 4 / hfmtreeWidgetLogic.scale,
       child: Stack(
-              fit: StackFit.expand,
-              children: [
+        fit: StackFit.expand,
+        children: [
           ///画板层（放在最底下）
           Transform.scale(
             scale: 0.8,
@@ -56,34 +57,36 @@ class HfmtreeWidgetView extends State<HfmtreeWidget>{
             ),
           )
         ],
-            ),
+      ),
     );
   }
 }
 
 class HfmtreeWidgetLogic extends GetxController {
-    List<TreeNode> leaves = [];
-    Map<int,TreeNode> allNodes = {};
+  List<TreeNode> leaves = [];
+  Map<int, TreeNode> allNodes = {};
   RxList<Widget> nodeStackWidgets = <Widget>[].obs;
   int height = 0;
-  Map<Offset,Offset> lines = {};
+  Map<Offset, Offset> lines = {};
   double scale = 1;
 
   void init() {
     height = HfmtreeUtil.getHeight(leaves);
-    if(height > 5){
-      scale = 1/pow(2,height - 4);
+    if (height > 5) {
+      scale = 1 / pow(2, height - 4);
     }
     lines = HfmtreeUtil.getLineOffsets(allNodes, leaves, height, scale);
     getNodeWidget(allNodes, height);
   }
 
-  void getNodeWidget(Map<int,TreeNode> allNodes,int height){
+  void getNodeWidget(Map<int, TreeNode> allNodes, int height) {
     Positioned p;
-    double l,t;
+    double l, t;
     allNodes.forEach((key, value) {
-       l = Constant.WIDGET_WIDEH/2 + (HfmtreeUtil.getNodeHorizontalOffset(
-          value.level, value.n, height) + 4) * scale; //加4纠正偏移
+      l = Constant.WIDGET_WIDEH / 2 +
+          (HfmtreeUtil.getNodeHorizontalOffset(value.level, value.n, height) +
+                  4) *
+              scale; //加4纠正偏移
       t = (HfmtreeUtil.getNodeVerticalOffset(value.level) + 0.0) * scale;
       p = Positioned(
           left: l,
@@ -93,8 +96,7 @@ class HfmtreeWidgetLogic extends GetxController {
             scale: scale,
             nodeL: l,
             nodeT: t,
-          )
-      );
+          ));
       nodeStackWidgets.add(p);
     });
   }
@@ -108,8 +110,10 @@ class HfmtreeWidgetBinding extends Bindings {
 }
 
 class BranchPainter extends CustomPainter {
-  final Map<Offset,Offset> lines ;
+  final Map<Offset, Offset> lines;
+
   const BranchPainter({required this.lines});
+
   @override
   void paint(Canvas canvas, Size size) {
     final hfmtreeWidgetLogic = Get.put(HfmtreeWidgetLogic());
@@ -119,7 +123,7 @@ class BranchPainter extends CustomPainter {
       ..strokeWidth = 3 * hfmtreeWidgetLogic.scale //线宽
       ..style = PaintingStyle.stroke //模式--线型
       ..isAntiAlias = true;
-    if(lines.isNotEmpty){
+    if (lines.isNotEmpty) {
       lines.forEach((key, value) {
         canvas.drawLine(key, value, paint);
       });

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:huffman_compressor/huffman_compressor.dart';
@@ -23,38 +21,45 @@ class DecodePage extends StatelessWidget {
     );
   }
 
-  Widget _decodeBody(){
+  Widget _decodeBody() {
     return Column(
-    children: [
-      const TitleRow(firstTitle: '解码内容',secondTitle: '解码结果',),
-      Expanded(child: _resultRow(),),
-    ],
+      children: [
+        const TitleRow(
+          firstTitle: '解码内容',
+          secondTitle: '解码结果',
+        ),
+        Expanded(
+          child: _resultRow(),
+        ),
+      ],
     );
   }
 
-  Widget _resultRow(){
+  Widget _resultRow() {
     final decodeLogic = Get.put(DecodeLogic());
     return Row(
       children: [
         Expanded(
-          child: ListView(
-              primary: false,
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(8),
-                  child: Obx(()=>Text(
-                    decodeLogic.decodeString.value,
+          child: ListView(primary: false, children: [
+            Container(
+              margin: const EdgeInsets.all(8),
+              child: Obx(
+                () => Text(decodeLogic.decodeString.value,
                     maxLines: null,
-                      style: const TextStyle(
-                          fontSize: Constant.FONT_SIZE
-                      )
-                  ),),
-                )
-              ]),
+                    style: const TextStyle(fontSize: Constant.FONT_SIZE)),
+              ),
+            )
+          ]),
         ),
-        const VerticalDivider(color: Colors.blue,width: 1,),
-        Obx(()=>decodeLogic.decoding.value?_decodingWidget():
-        (decodeLogic.decoded.value?_decodedWidget():_undecodeWidget())),
+        const VerticalDivider(
+          color: Colors.blue,
+          width: 1,
+        ),
+        Obx(() => decodeLogic.decoding.value
+            ? _decodingWidget()
+            : (decodeLogic.decoded.value
+                ? _decodedWidget()
+                : _undecodeWidget())),
       ],
     );
   }
@@ -67,36 +72,36 @@ class DecodePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: const [
           CircularProgressIndicator(),
-          SizedBox(height: 12,),
+          SizedBox(
+            height: 12,
+          ),
           Text(
             '解码中',
-            style: TextStyle(
-                fontSize: 24
-            ),
+            style: TextStyle(fontSize: 24),
           )
         ],
       ),
     );
   }
 
-  Widget _undecodeWidget(){
+  Widget _undecodeWidget() {
     final decodeLogic = Get.put(DecodeLogic());
     return Expanded(
-      flex: 2,
+        flex: 2,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ElevatedButton(
               child: const Text('开始解码'),
-              onPressed: (){
+              onPressed: () {
                 decodeLogic.decoding.value = true;
-                decodeLogic.decode().then((value){
-                  if(value){
+                decodeLogic.decode().then((value) {
+                  if (value) {
                     decodeLogic.decoding.value = false;
                     decodeLogic.decoded.value = true;
-                  }else{
-                    showToast('解码失败',position: ToastPosition.bottom);
+                  } else {
+                    showToast('解码失败', position: ToastPosition.bottom);
                     decodeLogic.decoding.value = false;
                     decodeLogic.decoded.value = false;
                   }
@@ -104,31 +109,23 @@ class DecodePage extends StatelessWidget {
               },
             )
           ],
-        )
-    );
+        ));
   }
 
-  Widget _decodedWidget(){
+  Widget _decodedWidget() {
     final decodeLogic = Get.put(DecodeLogic());
-    return  Expanded(
+    return Expanded(
       flex: 2,
-      child: ListView(
-          primary: false,
-          children: [
-            Container(
-              margin: const EdgeInsets.all(8),
-              child: Text(
-                decodeLogic.decodeResult,
-                maxLines: null,
-                style: const TextStyle(
-                  fontSize: Constant.FONT_SIZE
-                )
-              ),
-            )
-          ]),
+      child: ListView(primary: false, children: [
+        Container(
+          margin: const EdgeInsets.all(8),
+          child: Text(decodeLogic.decodeResult,
+              maxLines: null,
+              style: const TextStyle(fontSize: Constant.FONT_SIZE)),
+        )
+      ]),
     );
   }
-
 }
 
 class DecodeLogic extends GetxController {
@@ -138,27 +135,27 @@ class DecodeLogic extends GetxController {
   RxString decodeString = ''.obs;
 
   @override
-  void onInit()  {
+  void onInit() {
     super.onInit();
-   HuffmanCompressor.getEncodeResultWithoutFilename().then((value){
-     if(value != null){
-       decodeString.value = value;
-     }else{
-      showToast('编码结果读取错误',position: ToastPosition.bottom);
-     }
-   });
+    HuffmanCompressor.getEncodeResultWithoutFilename().then((value) {
+      if (value != null) {
+        decodeString.value = value;
+      } else {
+        showToast('编码结果读取错误', position: ToastPosition.bottom);
+      }
+    });
   }
 
   Future<bool> decode() async {
-    await HuffmanCompressor.getDecodeResult().then((value){
-      if(value == ''||value == null||value.isEmpty) return false;
+    await HuffmanCompressor.getDecodeResult().then((value) {
+      if (value == '' || value == null || value.isEmpty) return false;
       decodeResult = value;
       return true;
     });
     return true;
   }
 
-  void reset(){
+  void reset() {
     decoded.value = false;
     decoding.value = false;
     decodeResult = '';

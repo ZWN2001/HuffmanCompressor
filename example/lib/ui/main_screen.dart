@@ -7,7 +7,7 @@ import 'package:huffman_compressor_example/ui/init_and_encode.dart';
 import 'package:huffman_compressor_example/widgets/side_menu.dart';
 import 'package:huffman_compressor_example/widgets/windows_buttons.dart';
 
-class MainScreen extends StatelessWidget{
+class MainScreen extends StatelessWidget {
   const MainScreen({Key? key}) : super(key: key);
 
   @override
@@ -21,27 +21,29 @@ class MainScreen extends StatelessWidget{
             width: 170,
             child: SideMenu(),
           ),
-          const SizedBox(width: 16,),
+          const SizedBox(
+            width: 16,
+          ),
           Expanded(
             child: Column(children: [
               WindowTitleBarBox(
                   child: Row(children: [
-                    Expanded(child: MoveWindow(
-                      child: Container(
-                        color: Colors.blue,
-                        child: const Center(
-                            child:Text(
-                                '霍夫曼编解码',
-                              style: TextStyle(color: Colors.white),
-                            )),
-                      ),
+                Expanded(
+                    child: MoveWindow(
+                  child: Container(
+                    color: Colors.blue,
+                    child: const Center(
+                        child: Text(
+                      '霍夫曼编解码',
+                      style: TextStyle(color: Colors.white),
                     )),
-                    const WindowButtons()
-                  ])),
+                  ),
+                )),
+                const WindowButtons()
+              ])),
               Expanded(
-                  child: Obx(()=>mainScreenController.list[mainScreenController.selectedItem.value])
-              )
-
+                  child: Obx(() => mainScreenController
+                      .list[mainScreenController.selectedItem.value]))
             ]),
           ),
         ],
@@ -50,7 +52,7 @@ class MainScreen extends StatelessWidget{
   }
 }
 
-class MainScreenLogic extends GetxController{
+class MainScreenLogic extends GetxController {
   RxInt selectedItem = 0.obs;
   final List<Widget> list = [
     const InitAndEncodePage(),

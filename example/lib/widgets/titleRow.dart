@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
-class TitleRow extends StatelessWidget{
-  const TitleRow({Key? key, required this.firstTitle, required this.secondTitle}):super(key: key);
+class TitleRow extends StatelessWidget {
+  const TitleRow({
+    Key? key,
+    required this.firstTitle,
+    required this.secondTitle
+  }): super(key: key);
   final String firstTitle;
   final String secondTitle;
+
   @override
   Widget build(BuildContext context) {
     return Row(
