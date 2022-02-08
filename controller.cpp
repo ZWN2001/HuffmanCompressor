@@ -36,7 +36,7 @@ int main(){
 //    getCodeMapJsonStr();
 
 
-    decode("C:\\codefile\\codefile.txt");
+    decode("C:\\codefile\\encodeResult.txt");
     huff->writeTree("C:\\codefile\\hfmtree.txt");
     huff->readTree("C:\\codefile\\hfmtree.txt");
 //    refresh();
