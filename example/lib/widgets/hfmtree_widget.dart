@@ -43,10 +43,14 @@ class HfmtreeWidgetView extends State<HfmtreeWidget> {
             painter: BranchPainter(lines: hfmtreeWidgetLogic.lines),
           ),
           ///节点层
-          Obx(() => Stack(
-              children: hfmtreeWidgetLogic.nodeStackWidgets,
-            ),
-          ),
+          ///有obx时打包会出现UI异常
+          Stack(
+            children: hfmtreeWidgetLogic.nodeStackWidgets,
+          )
+          // Obx(() => Stack(
+          //     children: hfmtreeWidgetLogic.nodeStackWidgets,
+          //   ),
+          // ),
         ],
       ),
     );
@@ -92,6 +96,11 @@ class HfmtreeWidgetLogic extends GetxController {
       nodeStackWidgets.add(p);
     });
   }
+
+  // @override
+  // void refresh(){
+  //   refresh();
+  // }
 }
 
 class HfmtreeWidgetBinding extends Bindings {
