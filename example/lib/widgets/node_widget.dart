@@ -42,7 +42,7 @@ class _NodeWidgetState extends State<NodeWidget> {
             child: Text(
               '${widget.node.weight}',
               style:
-                  TextStyle(color: Colors.white, fontSize: 14 * widget.scale),
+                  TextStyle(color: Colors.white, fontSize: 12 * widget.scale),
             ),
           ),
         ),
@@ -68,7 +68,7 @@ class _NodeWidgetState extends State<NodeWidget> {
 
   Widget detailCard() {
     return Positioned(
-        left: widget.nodeL + ((Constant.NODE_SIZE + 4) * widget.scale),
+        left: widget.nodeL + ((Constant.NODE_SIZE) * widget.scale),
         top: widget.nodeT,
         child: Transform.scale(
           scale: widget.scale,

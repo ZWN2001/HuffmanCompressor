@@ -67,7 +67,7 @@ namespace {
     }
 
     bool decode() {
-        huff->ReadFile("C:\\codefile\\codefile.txt");
+        huff->ReadFile("C:\\codefile\\encodeResult.txt");
         return huff->decodeWithMap();
     }
 

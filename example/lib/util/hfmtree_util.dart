@@ -84,7 +84,7 @@ class HfmtreeUtil {
     int height = 0;
     if (leaves.isEmpty) return height;
     for (TreeNode leaf in leaves) {
-      if (leaf.level + 1 > height) height = leaf.level + 1;
+      if (leaf.codeword.length + 1 > height){ height = leaf.codeword.length + 1;}
     }
     return height;
   }

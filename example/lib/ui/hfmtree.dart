@@ -86,7 +86,7 @@ class HfmTreeLogic extends GetxController {
             .forEach((line) {
 //    l->key<<":"<<l->codeword<<":"<<l->level<<":"<<l->n<<":"<<l->p->num<<":"<<l->p->weight
 //       0            1                  2            3               4                 5
-          _infos = line.split(":");
+          _infos = line.split("<b>");
           _node = TreeNode(
               key: _infos[0],
               codeword: _infos[1],

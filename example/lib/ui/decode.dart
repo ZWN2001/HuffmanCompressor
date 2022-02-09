@@ -135,9 +135,9 @@ class DecodeLogic extends GetxController {
   RxString decodeString = ''.obs;
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
-    HuffmanCompressor.getEncodeResultWithoutFilename().then((value) {
+    await HuffmanCompressor.getEncodeResultWithoutFilename().then((value) {
       if (value != null) {
         decodeString.value = value;
       } else {

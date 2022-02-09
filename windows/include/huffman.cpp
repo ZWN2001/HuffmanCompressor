@@ -308,8 +308,8 @@ void HuffmanTree::removeNYT(Node* nyt) {
 }
 
 bool HuffmanTree::writeEncodeResultAsBinaryStream(const string& filepath,const string& filename){
-    os.close();
-    os.clear();
+//    os.close();
+//    os.clear();
     os.open(filepath +"\\"+ filename, std::ios_base::out);
     if (!os.is_open()) {
         ofstream { filepath +"\\"+ filename };
@@ -366,11 +366,12 @@ bool HuffmanTree::encode(const std::string& filepath,const std::string& filename
         }
         getline(is,cbuffer);
     }
-    os.close();
-    os.clear();
+//    os.close();
+//    os.clear();
     os.open("C:\\codefile\\encodeResult.txt", std::ios_base::out);
     os<<encodeResult;
     os.close();
+    cout<<"over";
     return writeEncodeResultAsBinaryStream(filepath,filename);
 }
 
@@ -405,8 +406,8 @@ bool HuffmanTree::decodeWithMap() {
             }
         }
     }
-    os.close();
-    os.clear();
+//    os.close();
+//    os.clear();
     os.open("C:\\codefile\\textfile.txt", std::ios_base::out);
     if (!os.is_open()) {
         ofstream { "C:\\codefile\\textfile.txt" };
@@ -446,8 +447,8 @@ int HuffmanTree::getLocate(int level, int n) {
 }
 
 bool HuffmanTree::writeTree(const std::string& filepath) {
-    os.close();
-    os.clear();
+//    os.close();
+//    os.clear();
     os.open(filepath, std::ios_base::out);
     if (!os.is_open()) {
         ofstream { filepath  };
@@ -460,7 +461,7 @@ bool HuffmanTree::writeTree(const std::string& filepath) {
     Leaf* l;
     for (auto & leave : leaves) {
         l = leaves.at(leave.first);
-        os<<l->key<<":"<<l->codeword<<":"<<l->level<<":"<<l->n<<":"<<l->p->num<<":"<<l->p->weight<<endl;
+        os<<l->key<<"<b>"<<l->codeword<<"<b>"<<l->level<<"<b>"<<l->n<<"<b>"<<l->p->num<<"<b>"<<l->p->weight<<endl;
     }
     os.close();
     return true;
