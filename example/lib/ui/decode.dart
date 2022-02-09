@@ -140,6 +140,7 @@ class DecodeLogic extends GetxController {
     await HuffmanCompressor.getEncodeResultWithoutFilename().then((value) {
       if (value != null) {
         decodeString.value = value;
+        refresh();
       } else {
         showToast('编码结果读取错误', position: ToastPosition.bottom);
       }

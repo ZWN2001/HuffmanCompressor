@@ -37,25 +37,16 @@ class HfmtreeWidgetView extends State<HfmtreeWidget> {
     return InteractiveViewer(
       maxScale: 4 / hfmtreeWidgetLogic.scale,
       child: Stack(
-        fit: StackFit.expand,
         children: [
           ///画板层（放在最底下）
-          Transform.scale(
-            scale: 0.8,
-            child: CustomPaint(
-              painter: BranchPainter(lines: hfmtreeWidgetLogic.lines),
+          CustomPaint(
+            painter: BranchPainter(lines: hfmtreeWidgetLogic.lines),
+          ),
+          ///节点层
+          Obx(() => Stack(
+              children: hfmtreeWidgetLogic.nodeStackWidgets,
             ),
           ),
-
-          ///节点层
-          Transform.scale(
-            scale: 0.8,
-            child: Obx(
-              () => Stack(
-                children: hfmtreeWidgetLogic.nodeStackWidgets,
-              ),
-            ),
-          )
         ],
       ),
     );
@@ -77,6 +68,7 @@ class HfmtreeWidgetLogic extends GetxController {
     }
     lines = HfmtreeUtil.getLineOffsets(allNodes, leaves, height, scale);
     getNodeWidget(allNodes, height);
+    refresh();
   }
 
   void getNodeWidget(Map<int, TreeNode> allNodes, int height) {
@@ -117,7 +109,6 @@ class BranchPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final hfmtreeWidgetLogic = Get.put(HfmtreeWidgetLogic());
-    // 创建画笔
     final Paint paint = Paint()
       ..color = Colors.blue
       ..strokeWidth = 3 * hfmtreeWidgetLogic.scale //线宽
