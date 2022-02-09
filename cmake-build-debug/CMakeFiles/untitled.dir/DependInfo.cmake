@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "D:/myCppProject/untitled/controller.cpp" "D:/myCppProject/untitled/cmake-build-debug/CMakeFiles/untitled.dir/controller.cpp.obj"
+  "D:/myCppProject/untitled/efficient.cpp" "D:/myCppProject/untitled/cmake-build-debug/CMakeFiles/untitled.dir/efficient.cpp.obj"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
