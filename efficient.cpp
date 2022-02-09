@@ -1,11 +1,10 @@
 #include<iostream>
 #include<cstdio>
-#include<cstring>
 #include<string>
 #include<conio.h>
-#include<cstdlib>
 #include<io.h>
 #include <ctime>
+#include <windows.h>
 
 using namespace std;
 
@@ -189,7 +188,9 @@ void compress() {
     cout << "文件压缩中..." << endl;
 
     //[TIME-START]
-    const double begin = (double) clock() / CLK_TCK;
+    LARGE_INTEGER t1,t2,tc;
+    QueryPerformanceFrequency(&tc);
+    QueryPerformanceCounter(&t1);
 
     //统计字符种类数和频数
     unsigned char c;
@@ -278,12 +279,13 @@ void compress() {
     fclose(outfile);
 
 //[TIME-END]
-    const double end = (double) clock() / CLK_TCK;
+    QueryPerformanceCounter(&t2);
+    double time1=(double)(t2.QuadPart-t1.QuadPart)/(double)tc.QuadPart;
     cout << "压缩成功！" << endl;
     float s;
     s = (float) charNum / (float) total;
     cout << "压缩率为：" << s << endl;
-    cout << "耗时为：" << (end - begin) << " s" << endl;
+    cout << "耗时为：" << time1<< " s" << endl;
     _getch();
 }
 
@@ -333,7 +335,9 @@ void decompress() {
     }
     cout << "解压文件中..." << endl;
     //[TIME-BEGIN]
-    const double begin = (double) clock() / CLK_TCK;
+    LARGE_INTEGER t1,t2,tc;
+    QueryPerformanceFrequency(&tc);
+    QueryPerformanceCounter(&t1);
 
     unsigned long total = 0;
     // 将第一个 long 长度数据读入 tatol 中，为文件的总大小
@@ -391,37 +395,39 @@ void decompress() {
     fclose(outfile);
 
     //[TIME-END]
-    const double end = (double) clock() / CLK_TCK;
+
+    QueryPerformanceCounter(&t2);
+    double time2 =(double)(t2.QuadPart-t1.QuadPart)/(double)tc.QuadPart;
 
     cout << "解压成功" << endl;
-    cout << "耗时为：" << (end - begin) << " s" << endl;
+    cout << "耗时为：" << time2 << " s" << endl;
     _getch();
 }
 
-//int main() {
-//    while (true) {
-//        showGUI();
-//        char option;
-//        cin >> option;
-//        while (option != '1' && option != '2') {
-//            cout << "无效的输入！\n";
-//            cout << "请选择操作：";
-//            cin >> option;
-//        }
-//        switch (option) {
-//            case '1': {
-//                compress();
-//                break;
-//            }
-//            case '2': {
-//                decompress();
-//                break;
-//            }
-//            default: {
-//                cout << "退出" << endl;
-//                return 0;
-//            }
-//        }
-//        system("cls");
-//    }
-//}
+int main() {
+    while (true) {
+        showGUI();
+        char option;
+        cin >> option;
+        while (option != '1' && option != '2') {
+            cout << "无效的输入！\n";
+            cout << "请选择操作：";
+            cin >> option;
+        }
+        switch (option) {
+            case '1': {
+                compress();
+                break;
+            }
+            case '2': {
+                decompress();
+                break;
+            }
+            default: {
+                cout << "退出" << endl;
+                return 0;
+            }
+        }
+        system("cls");
+    }
+}

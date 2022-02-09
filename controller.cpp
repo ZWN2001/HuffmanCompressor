@@ -18,15 +18,15 @@ delete huff;
 huff = new HuffmanTree();
 }
 
-int main(){
-    string str = "C:\\codefile\\tobetrans.txt";
-    buildTreeAndEncode(str);
-    str = "C:\\codefile\\tobetrans.txt";
-    huff->ReadFile(str);
-    huff->encode("C:\\codefile","codefile.txt");
-    decode("C:\\codefile\\encodeResult.txt");
-    huff->writeTree("C:\\codefile\\hfmtree.txt");
-    huff->readTree("C:\\codefile\\hfmtree.txt");
-//    refresh();
-    return 0;
-}
+//int main(){
+//    string str = "C:\\codefile\\tobetrans.txt";
+//    buildTreeAndEncode(str);
+//    str = "C:\\codefile\\tobetrans.txt";
+//    huff->ReadFile(str);
+//    huff->encode("C:\\codefile","codefile.txt");
+//    decode("C:\\codefile\\encodeResult.txt");
+//    huff->writeTree("C:\\codefile\\hfmtree.txt");
+//    huff->readTree("C:\\codefile\\hfmtree.txt");
+////    refresh();
+//    return 0;
+//}
