@@ -10,7 +10,8 @@ class DecodePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final decodeLogic = Get.put(DecodeLogic());
+    final decodeLogic = Get.put(DecodeLogic());
+    decodeLogic.onInit();
     return Scaffold(
       appBar: AppBar(
         title: const Text('解码'),
@@ -43,8 +44,8 @@ class DecodePage extends StatelessWidget {
           child: ListView(primary: false, children: [
             Container(
               margin: const EdgeInsets.all(8),
-              child: Obx(
-                () => Text(decodeLogic.decodeString.value,
+              child: Obx(() => Text(
+                    decodeLogic.decodeString.value,
                     maxLines: null,
                     style: const TextStyle(fontSize: Constant.FONT_SIZE)),
               ),
@@ -137,10 +138,10 @@ class DecodeLogic extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
+    decodeString.value = '';
     await HuffmanCompressor.getEncodeResultWithoutFilename().then((value) {
-      if (value != null) {
+      if (value != null&&value != "") {
         decodeString.value = value;
-        refresh();
       } else {
         showToast('编码结果读取错误', position: ToastPosition.bottom);
       }
@@ -160,7 +161,6 @@ class DecodeLogic extends GetxController {
     decoded.value = false;
     decoding.value = false;
     decodeResult = '';
-    decodeString.value = '';
   }
 }
 
